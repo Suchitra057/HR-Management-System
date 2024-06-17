@@ -1,0 +1,247 @@
+import java.awt.EventQueue;
+import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableModel;
+import com.mysql.cj.jdbc.result.ResultSetMetaData;
+import java.awt.Font;
+import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.awt.event.ActionEvent;
+import java.awt.Color;
+import java.awt.SystemColor;
+import javax.swing.border.CompoundBorder;
+import java.awt.print.*;
+import javafx.print.Printer;
+import com.toedter.calendar.JCalendar;
+import com.toedter.components.JLocaleChooser;
+
+
+public class employeelist extends JFrame {
+
+	private static final long serialVersionUID = 1L;
+	private JPanel contentPane;
+	protected JTable table_1;
+	private JTable table;
+
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					employeelist frame = new employeelist();
+					frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
+	/**
+	 * Create the frame.
+	 */
+	public employeelist() {
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setBounds(100, 100, 1368, 506);
+		contentPane = new JPanel();
+		contentPane.setBackground(new Color(31, 53, 56));
+		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+
+		setContentPane(contentPane);
+		contentPane.setLayout(null);
+		
+		JButton btnNewButton_1 = new JButton("Delete");
+		btnNewButton_1.setForeground(new Color(192, 192, 192));
+		btnNewButton_1.setBackground(new Color(31, 53, 56));
+		btnNewButton_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					new deleteemployee().setVisible(true);
+					SwingUtilities.windowForComponent(btnNewButton_1).dispose();
+				}
+				catch(Exception o) {
+					JOptionPane.showMessageDialog(btnNewButton_1,this,"Error while establishing connection failed",0);
+				}
+				
+			}
+		});
+		btnNewButton_1.setFont(new Font("Times New Roman", Font.BOLD, 28));
+		btnNewButton_1.setBounds(20, 236, 139, 51);
+		contentPane.add(btnNewButton_1);
+		
+		JButton btnNewButton = new JButton("SHOW");
+		btnNewButton.setForeground(new Color(192, 192, 192));
+		btnNewButton.setBackground(new Color(31, 53, 56));
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					Class.forName("com.mysql.cj.jdbc.Driver");
+					Connection con = (Connection)DriverManager.getConnection("jdbc:mysql://localhost:3306/employee","root","Sridevi@123");
+					String sql="select * from employee";
+					
+					PreparedStatement pts=con.prepareStatement(sql);
+					//PreparedStatement pts=con.prepareStatement(login.sq1);
+					ResultSet rs= pts.executeQuery();
+					DefaultTableModel dt=(DefaultTableModel)table.getModel();
+					dt.setRowCount(0);
+					while(rs.next()) {
+					
+					Object o[]= {rs.getString("Name"),rs.getString("Gender"),rs.getString("Birthdate"),rs.getString("EmployeeID"),rs.getString("Age"),rs.getString("Maritalstatus"),rs.getString("Nationality"),rs.getString("State"),rs.getString("Address"),rs.getString("Mobilephone"),rs.getString("Email"),rs.getString("Status"),rs.getString("Supervisor"),rs.getString("Hireddate"),rs.getString("Department")};
+					dt.addRow(o);
+					}
+			}
+			catch(Exception ec) {
+					JOptionPane.showMessageDialog(null,"it has not been registered");
+					ec.printStackTrace();
+				}
+			}
+		});
+		btnNewButton.setFont(new Font("Times New Roman", Font.BOLD, 28));
+		btnNewButton.setBounds(20, 37, 139, 46);
+		contentPane.add(btnNewButton);
+		
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(181, 37, 1100, 331);
+		contentPane.add(scrollPane);
+		
+		table = new JTable();
+		table.setBackground(Color.WHITE);
+		table.setFont(new Font("Tahoma", Font.PLAIN, 10));
+		table.setForeground(UIManager.getColor("Button.foreground"));
+		table.setModel(new DefaultTableModel(
+			new Object[][] {
+				{null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
+			},
+			new String[] {
+				"NAME", "GENDER", "BIRTH DATE", "EMPLOYEE ID", "AGE", "MARITAL STATUS", "NATIONALITY", "STATE", "ADDRESS", "MOBILE PHONE", "EMAIL", "STATUS", "SUPERVISOR", "HIRED DATE", "DEPARTMENT"
+			}
+		));
+		table.getColumnModel().getColumn(5).setPreferredWidth(95);
+		table.getColumnModel().getColumn(9).setPreferredWidth(82);
+		scrollPane.setViewportView(table);
+		
+		JButton btnNewButton_2 = new JButton("Add");
+		btnNewButton_2.setForeground(new Color(192, 192, 192));
+		btnNewButton_2.setBackground(new Color(31, 53, 56));
+		btnNewButton_2.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					new Employeedetails().setVisible(true);
+					SwingUtilities.windowForComponent(btnNewButton_2).dispose();
+				}
+				catch(Exception o) {
+					JOptionPane.showMessageDialog(btnNewButton_2,this,"Error while establishing connection failed",0);
+				}
+			}
+		});
+		btnNewButton_2.setFont(new Font("Times New Roman", Font.BOLD, 28));
+		btnNewButton_2.setBounds(20, 106, 139, 46);
+		contentPane.add(btnNewButton_2);
+		
+		JButton btnNewButton_3 = new JButton("Update");
+		btnNewButton_3.setForeground(new Color(192, 192, 192));
+		btnNewButton_3.setBackground(new Color(31, 53, 56));
+		btnNewButton_3.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					new updateemployee().setVisible(true);
+					SwingUtilities.windowForComponent(btnNewButton_3).dispose();
+				}
+				catch(Exception o) {
+					JOptionPane.showMessageDialog(btnNewButton_3,this,"Error while establishing connection failed",0);
+				}
+			}
+		});
+		btnNewButton_3.setFont(new Font("Times New Roman", Font.BOLD, 28));
+		btnNewButton_3.setBounds(20, 170, 139, 46);
+		contentPane.add(btnNewButton_3);
+		
+		JLabel lblNewLabel = new JLabel("Employee Details");
+		lblNewLabel.setForeground(new Color(192, 192, 192));
+		lblNewLabel.setFont(new Font("Times New Roman", Font.BOLD, 25));
+		lblNewLabel.setBounds(577, 0, 224, 27);
+		contentPane.add(lblNewLabel);
+		
+		JButton btnNewButton_4 = new JButton("Print");
+		btnNewButton_4.setForeground(new Color(192, 192, 192));
+		btnNewButton_4.setBackground(new Color(31, 53, 56));
+		btnNewButton_4.addActionListener(new ActionListener() {
+			private JTable txtReceipt;
+
+			public void actionPerformed(ActionEvent e) {
+				try {
+					table.print();
+				} catch (PrinterException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+
+			}
+		});
+		btnNewButton_4.setFont(new Font("Tahoma", Font.BOLD, 23));
+		btnNewButton_4.setBounds(1100, 388, 114, 46);
+		contentPane.add(btnNewButton_4);
+		
+		JButton btnNewButton_1_1 = new JButton("Search");
+		btnNewButton_1_1.setForeground(new Color(192, 192, 192));
+		btnNewButton_1_1.setBackground(new Color(31, 53, 56));
+		btnNewButton_1_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					new searchemployee().setVisible(true);
+					SwingUtilities.windowForComponent(btnNewButton_1_1).dispose();
+				}
+				catch(Exception o) {
+					JOptionPane.showMessageDialog(btnNewButton_1_1,this,"Error while establishing connection failed",0);
+				}
+				
+			}
+		});
+		btnNewButton_1_1.setFont(new Font("Times New Roman", Font.BOLD, 28));
+		btnNewButton_1_1.setBounds(20, 308, 139, 51);
+		contentPane.add(btnNewButton_1_1);
+		
+		JButton btnNewButton_5 = new JButton("Back");
+		btnNewButton_5.setForeground(new Color(192, 192, 192));
+		btnNewButton_5.setBackground(new Color(29, 54, 54));
+		btnNewButton_5.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					new Dashboardpage().setVisible(true);
+					SwingUtilities.windowForComponent(btnNewButton_5).dispose();
+				}
+				catch(Exception o) {
+					JOptionPane.showMessageDialog(btnNewButton_5,this,"Error while establishing connection failed",0);
+				}
+			}
+		});
+		btnNewButton_5.setFont(new Font("Times New Roman", Font.BOLD, 28));
+		btnNewButton_5.setBounds(26, 406, 101, 39);
+		contentPane.add(btnNewButton_5);
+	}
+}

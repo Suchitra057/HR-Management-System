@@ -1,0 +1,398 @@
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import java.awt.Font;
+import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
+import javax.swing.JButton;
+import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.awt.event.ActionEvent;
+import javax.swing.JComboBox;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.border.MatteBorder;
+import java.awt.Color;
+import java.awt.EventQueue;
+
+import com.toedter.calendar.JDateChooser;
+import javax.swing.ImageIcon;
+import java.awt.SystemColor;
+import javax.swing.UIManager;
+
+public class Employeedetails extends JFrame {
+
+	private static final long serialVersionUID = 1L;
+	private JPanel contentPane;
+	private JTextField textField;
+	private JTextField textField_3;
+	private JTextField textField_4;
+	private JTextField textField_8;
+	private JTextField textField_9;
+	private JTextField textField_10;
+	private JTextField textField_12;
+	private JTextField textField_14;
+	private JComboBox<String> comboBox_1_1;
+	private JComboBox<String> comboBox_1;
+	private JComboBox<String> comboBox_1_2;
+	private JComboBox<String> comboBox_1_3;
+	private JComboBox<String> comboBox_1_4;
+	private JDateChooser dateChooser;
+	private JDateChooser dateChooser_1;
+
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					Employeedetails frame = new Employeedetails();
+					frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
+	/**
+	 * Create the frame.
+	 */
+	public Employeedetails() {
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setBounds(100, 100, 682, 800);
+		contentPane = new JPanel();
+		contentPane.setBackground(new Color(31, 53, 56));
+		contentPane.setBorder(new MatteBorder(1, 1, 1, 1, (Color) new Color(0, 0, 0)));
+		setContentPane(contentPane);
+		contentPane.setLayout(null);
+
+		JLabel lblNewLabel = new JLabel("Employee Details");
+		lblNewLabel.setForeground(new Color(227, 227, 227));
+		lblNewLabel.setBackground(new Color(255, 255, 255));
+		lblNewLabel.setFont(new Font("Times New Roman", Font.BOLD, 40));
+		lblNewLabel.setBounds(162, 0, 414, 47);
+		contentPane.add(lblNewLabel);
+
+		JLabel lblNewLabel_1 = new JLabel("Name");
+		lblNewLabel_1.setForeground(new Color(222, 222, 222));
+		lblNewLabel_1.setFont(new Font("Times New Roman", Font.PLAIN, 20));
+		lblNewLabel_1.setBounds(97, 96, 203, 25);
+		contentPane.add(lblNewLabel_1);
+
+		JLabel lblNewLabel_2 = new JLabel("Gender");
+		lblNewLabel_2.setForeground(new Color(222, 222, 222));
+		lblNewLabel_2.setFont(new Font("Times New Roman", Font.PLAIN, 20));
+		lblNewLabel_2.setBounds(97, 131, 203, 25);
+		contentPane.add(lblNewLabel_2);
+
+		JLabel lblNewLabel_3 = new JLabel("Employee ID");
+		lblNewLabel_3.setForeground(new Color(222, 222, 222));
+		lblNewLabel_3.setIcon(null);
+		lblNewLabel_3.setFont(new Font("Times New Roman", Font.PLAIN, 20));
+		lblNewLabel_3.setBounds(97, 201, 203, 25);
+		contentPane.add(lblNewLabel_3);
+
+		JLabel lblNewLabel_10 = new JLabel("Personal Details");
+		lblNewLabel_10.setForeground(new Color(222, 222, 222));
+		lblNewLabel_10.setBackground(SystemColor.inactiveCaptionBorder);
+		lblNewLabel_10.setFont(new Font("Times New Roman", Font.BOLD, 28));
+		lblNewLabel_10.setBounds(10, 61, 238, 25);
+		contentPane.add(lblNewLabel_10);
+
+		JLabel lblNewLabel_21 = new JLabel("Birth Date");
+		lblNewLabel_21.setForeground(new Color(222, 222, 222));
+		lblNewLabel_21.setFont(new Font("Times New Roman", Font.PLAIN, 20));
+		lblNewLabel_21.setBounds(97, 166, 203, 25);
+		contentPane.add(lblNewLabel_21);
+
+		textField = new JTextField();
+		textField.setBounds(320, 96, 272, 25);
+		contentPane.add(textField);
+		textField.setColumns(10);
+
+		textField_3 = new JTextField();
+		textField_3.setBounds(320, 201, 272, 25);
+		contentPane.add(textField_3);
+		textField_3.setColumns(10);
+
+		JLabel lblNewLabel_5_1 = new JLabel("Age");
+		lblNewLabel_5_1.setForeground(new Color(222, 222, 222));
+		lblNewLabel_5_1.setFont(new Font("Times New Roman", Font.PLAIN, 20));
+		lblNewLabel_5_1.setBounds(97, 236, 203, 25);
+		contentPane.add(lblNewLabel_5_1);
+
+		JLabel lblNewLabel_6_1 = new JLabel("Marital Status");
+		lblNewLabel_6_1.setForeground(new Color(222, 222, 222));
+		lblNewLabel_6_1.setFont(new Font("Times New Roman", Font.PLAIN, 20));
+		lblNewLabel_6_1.setBounds(97, 271, 203, 25);
+		contentPane.add(lblNewLabel_6_1);
+
+		JLabel lblNewLabel_7_1 = new JLabel("Nationality");
+		lblNewLabel_7_1.setForeground(new Color(222, 222, 222));
+		lblNewLabel_7_1.setBackground(new Color(240, 240, 240));
+		lblNewLabel_7_1.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		lblNewLabel_7_1.setBounds(97, 306, 203, 25);
+		contentPane.add(lblNewLabel_7_1);
+
+		JLabel lblNewLabel_8_1 = new JLabel("State");
+		lblNewLabel_8_1.setForeground(new Color(222, 222, 222));
+		lblNewLabel_8_1.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		lblNewLabel_8_1.setBounds(97, 341, 203, 25);
+		contentPane.add(lblNewLabel_8_1);
+
+		JLabel lblNewLabel_11_1 = new JLabel("Address");
+		lblNewLabel_11_1.setForeground(new Color(222, 222, 222));
+		lblNewLabel_11_1.setFont(new Font("Times New Roman", Font.PLAIN, 20));
+		lblNewLabel_11_1.setBounds(97, 376, 203, 25);
+		contentPane.add(lblNewLabel_11_1);
+
+		JLabel lblNewLabel_12_1 = new JLabel("Contact Information");
+		lblNewLabel_12_1.setForeground(new Color(222, 222, 222));
+		lblNewLabel_12_1.setFont(new Font("Times New Roman", Font.BOLD, 28));
+		lblNewLabel_12_1.setBounds(10, 411, 290, 25);
+		contentPane.add(lblNewLabel_12_1);
+
+		JLabel lblNewLabel_13_1 = new JLabel("Mobile Phone");
+		lblNewLabel_13_1.setForeground(new Color(222, 222, 222));
+		lblNewLabel_13_1.setFont(new Font("Times New Roman", Font.PLAIN, 20));
+		lblNewLabel_13_1.setBounds(96, 446, 203, 25);
+		contentPane.add(lblNewLabel_13_1);
+
+		JLabel lblNewLabel_14_1_1 = new JLabel("E-mail");
+		lblNewLabel_14_1_1.setForeground(new Color(222, 222, 222));
+		lblNewLabel_14_1_1.setFont(new Font("Times New Roman", Font.PLAIN, 20));
+		lblNewLabel_14_1_1.setBounds(97, 481, 151, 25);
+		contentPane.add(lblNewLabel_14_1_1);
+
+		JLabel lblNewLabel_16_1_1 = new JLabel("Employee Status");
+		lblNewLabel_16_1_1.setForeground(new Color(222, 222, 222));
+		lblNewLabel_16_1_1.setFont(new Font("Times New Roman", Font.BOLD, 28));
+		lblNewLabel_16_1_1.setBounds(19, 516, 290, 34);
+		contentPane.add(lblNewLabel_16_1_1);
+
+		JLabel lblNewLabel_17_1_1 = new JLabel("Status");
+		lblNewLabel_17_1_1.setForeground(new Color(222, 222, 222));
+		lblNewLabel_17_1_1.setFont(new Font("Times New Roman", Font.PLAIN, 20));
+		lblNewLabel_17_1_1.setBounds(97, 560, 203, 25);
+		contentPane.add(lblNewLabel_17_1_1);
+
+		JLabel lblNewLabel_18_1_1 = new JLabel("Supervisor");
+		lblNewLabel_18_1_1.setForeground(new Color(222, 222, 222));
+		lblNewLabel_18_1_1.setFont(new Font("Times New Roman", Font.PLAIN, 20));
+		lblNewLabel_18_1_1.setBounds(97, 595, 204, 25);
+		contentPane.add(lblNewLabel_18_1_1);
+
+		JLabel lblNewLabel_19_1_1 = new JLabel("Hired Date");
+		lblNewLabel_19_1_1.setForeground(new Color(222, 222, 222));
+		lblNewLabel_19_1_1.setFont(new Font("Times New Roman", Font.PLAIN, 20));
+		lblNewLabel_19_1_1.setBounds(97, 630, 203, 25);
+		contentPane.add(lblNewLabel_19_1_1);
+
+		JLabel lblNewLabel_20_1_1 = new JLabel("Department");
+		lblNewLabel_20_1_1.setForeground(new Color(222, 222, 222));
+		lblNewLabel_20_1_1.setFont(new Font("Times New Roman", Font.PLAIN, 20));
+		lblNewLabel_20_1_1.setBounds(97, 665, 203, 25);
+		contentPane.add(lblNewLabel_20_1_1);
+
+		textField_4 = new JTextField();
+		textField_4.setColumns(10);
+		textField_4.setBounds(320, 236, 272, 25);
+		contentPane.add(textField_4);
+
+		textField_8 = new JTextField();
+		textField_8.setColumns(10);
+		textField_8.setBounds(320, 376, 272, 25);
+		contentPane.add(textField_8);
+
+		textField_9 = new JTextField();
+		textField_9.setColumns(10);
+		textField_9.setBounds(320, 446, 272, 25);
+		contentPane.add(textField_9);
+
+		textField_10 = new JTextField();
+		textField_10.setColumns(10);
+		textField_10.setBounds(320, 481, 272, 25);
+		contentPane.add(textField_10);
+
+		textField_12 = new JTextField();
+		textField_12.setColumns(10);
+		textField_12.setBounds(320, 595, 272, 25);
+		contentPane.add(textField_12);
+
+		textField_14 = new JTextField();
+		textField_14.setColumns(10);
+		textField_14.setBounds(320, 665, 272, 25);
+		contentPane.add(textField_14);
+
+		JButton btnNewButton_1_2_1 = new JButton("RESET");
+		btnNewButton_1_2_1.setForeground(new Color(228, 228, 228));
+		btnNewButton_1_2_1.setBackground(new Color(31, 53, 56));
+		btnNewButton_1_2_1.setFont(new Font("Times New Roman", Font.PLAIN, 20));
+		btnNewButton_1_2_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				clearFields();
+			}
+		});
+		btnNewButton_1_2_1.setBounds(513, 710, 131, 31);
+		contentPane.add(btnNewButton_1_2_1);
+
+		JButton btnNewButton_1_2_1_1 = new JButton("SUBMIT");
+		btnNewButton_1_2_1_1.setForeground(new Color(228, 228, 228));
+		btnNewButton_1_2_1_1.setBackground(new Color(31, 53, 56));
+		btnNewButton_1_2_1_1.setFont(new Font("Times New Roman", Font.PLAIN, 20));
+		btnNewButton_1_2_1_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				handleSubmit();
+			}
+		});
+		btnNewButton_1_2_1_1.setBounds(267, 710, 131, 31);
+		contentPane.add(btnNewButton_1_2_1_1);
+
+		comboBox_1 = new JComboBox<>();
+		comboBox_1.setModel(new DefaultComboBoxModel(new String[] {"---------------------Select Gender--------------------", "Male", "Female", "Transgender"}));
+		comboBox_1.setBounds(320, 131, 272, 25);
+		contentPane.add(comboBox_1);
+
+		comboBox_1_1 = new JComboBox<>();
+		comboBox_1_1.setModel(new DefaultComboBoxModel(new String[] {"----------------------Select Status--------------------", "Married", "Unmarried"}));
+		comboBox_1_1.setBounds(320, 271, 272, 25);
+		contentPane.add(comboBox_1_1);
+
+		comboBox_1_2 = new JComboBox<>();
+		comboBox_1_2.setModel(new DefaultComboBoxModel(new String[] {"---------------------Select Country-------------------", "Afghanistan", "Albania", "Algeria", "Andorra", "Angola", "Antigua and Barbuda", "Argentina", "Armenia", "Australia", "Austria", "Azerbaijan", "Bahamas", "Bahrain", "Bangladesh", "Barbados", "Belarus", "Belgium", "Belize", "Benin", "Bhutan", "Bolivia", "Bosnia and Herzegovina", "Botswana", "Brazil", "Brunei", "Bulgaria", "Burkina Faso", "Burundi", "Cabo Verde", "Cambodia", "Cameroon", "Canada", "Central African Republic", "Chad", "Chile", "China", "Colombia", "Comoros", "Congo, Democratic Republic of the", "Congo, Republic of the", "Costa Rica", "Croatia", "Cuba", "Cyprus", "Czechia (Czech Republic)", "Denmark", "Djibouti", "Dominica", "Dominican Republic", "East Timor (Timor-Leste)", "Ecuador", "Egypt", "El Salvador", "Equatorial Guinea", "Eritrea", "Estonia", "Eswatini", "Ethiopia", "Fiji", "Finland", "France", "Gabon", "Gambia", "Georgia", "Germany", "Ghana", "Greece", "Grenada", "Guatemala", "Guinea", "Guinea-Bissau", "Guyana", "Haiti", "Honduras", "Hungary", "Iceland", "India", "Indonesia", "Iran", "Iraq", "Ireland", "Israel", "Italy", "Ivory Coast (Côte d'Ivoire)", "Jamaica", "Japan", "Jordan", "Kazakhstan", "Kenya", "Kiribati", "Korea, North", "Korea, South", "Kosovo", "Kuwait", "Kyrgyzstan", "Laos", "Latvia", "Lebanon", "Lesotho", "Liberia", "Libya", "Liechtenstein", "Lithuania", "Luxembourg", "Madagascar", "Malawi", "Malaysia", "Maldives", "Mali", "Malta", "Marshall Islands", "Mauritania", "Mauritius", "Mexico", "Micronesia", "Moldova", "Monaco", "Mongolia", "Montenegro", "Morocco", "Mozambique", "Myanmar (Burma)", "Namibia", "Nauru", "Nepal", "Netherlands", "New Zealand", "Nicaragua", "Niger", "Nigeria", "North Macedonia", "Norway", "Oman", "Pakistan", "Palau", "Panama", "Papua New Guinea", "Paraguay", "Peru", "Philippines", "Poland", "Portugal", "Qatar", "Romania", "Russia", "Rwanda", "Saint Kitts and Nevis", "Saint Lucia", "Saint Vincent and the Grenadines", "Samoa", "San Marino", "Sao Tome and Principe", "Saudi Arabia", "Senegal", "Serbia", "Seychelles", "Sierra Leone", "Singapore", "Slovakia", "Slovenia", "Solomon Islands", "Somalia", "South Africa", "SouthSudan", "Spain", "Sri Lanka", "Sudan", "Suriname", "Sweden", "Switzerland", "Syria", "Taiwan", "Tajikistan", "Tanzania", "Thailand", "Togo", "Tonga", "Trinidad and Tobago", "Tunisia", "Turkey", "Turkmenistan", "Tuvalu", "Uganda", "Ukraine", "United Arab Emirates", "United Kingdom", "United States", "Uruguay", "Uzbekistan", "Vanuatu", "Vatican City", "Venezuela", "Vietnam", "Yemen", "Zambia", "Zimbabwe"}));
+		comboBox_1_2.setBounds(320, 306, 272, 25);
+		contentPane.add(comboBox_1_2);
+
+		comboBox_1_3 = new JComboBox<>();
+		comboBox_1_3.setModel(new DefaultComboBoxModel(new String[] {"-----------------------Select State---------------------", "Andhra Pradesh", "Arunachal Pradesh", "Assam", "Bihar", "Chhattisgarh", "Goa", "Gujarat", "Haryana", "Himachal Pradesh", "Jharkhand", "Karnataka", "Kerala", "Madhya Pradesh", "Maharashtra", "Manipur", "Meghalaya", "Mizoram", "Nagaland", "Odisha", "Punjab", "Rajasthan", "Sikkim", "Tamil Nadu", "Telangana", "Tripura", "Uttar Pradesh", "Uttarakhand", "West Bengal", "Andaman and Nicobar Islands", "Chandigarh", "Dadra and Nagar Haveli and Daman and Diu", "Delhi", "Jammu and Kashmir", "Lakshadweep", "Ladakh", "Puducherry"}));
+		comboBox_1_3.setBounds(320, 341, 272, 25);
+		contentPane.add(comboBox_1_3);
+
+		comboBox_1_4 = new JComboBox<>();
+		comboBox_1_4.setModel(new DefaultComboBoxModel(new String[] {"----------------------Select Status--------------------", "Full-time", "Part-time"}));
+		comboBox_1_4.setBounds(320, 560, 272, 25);
+		contentPane.add(comboBox_1_4);
+
+		dateChooser = new JDateChooser();
+		dateChooser.setBounds(320, 166, 272, 25);
+		contentPane.add(dateChooser);
+
+		dateChooser_1 = new JDateChooser();
+		dateChooser_1.setBounds(320, 630, 272, 25);
+		contentPane.add(dateChooser_1);
+		
+		JButton btnNewButton_1_2_1_1_1 = new JButton("BACK");
+		btnNewButton_1_2_1_1_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					new Dashboardpage().setVisible(true);
+					SwingUtilities.windowForComponent(btnNewButton_1_2_1_1_1).dispose();
+				}
+				catch(Exception o) {
+					JOptionPane.showMessageDialog(btnNewButton_1_2_1_1_1,this,"Error while establishing connection failed",0);
+				}
+				
+			}
+		});
+		btnNewButton_1_2_1_1_1.setForeground(new Color(228, 228, 228));
+		btnNewButton_1_2_1_1_1.setFont(new Font("Times New Roman", Font.PLAIN, 20));
+		btnNewButton_1_2_1_1_1.setBackground(new Color(31, 53, 56));
+		btnNewButton_1_2_1_1_1.setBounds(26, 710, 131, 31);
+		contentPane.add(btnNewButton_1_2_1_1_1);
+	}
+
+	private void clearFields() {
+		textField.setText("");
+		textField_3.setText("");
+		textField_4.setText("");
+		textField_8.setText("");
+		textField_9.setText("");
+		textField_10.setText("");
+		textField_12.setText("");
+		textField_14.setText("");
+		comboBox_1.setSelectedIndex(0);
+		comboBox_1_1.setSelectedIndex(0);
+		comboBox_1_2.setSelectedIndex(0);
+		comboBox_1_3.setSelectedIndex(0);
+		comboBox_1_4.setSelectedIndex(0);
+		dateChooser.setDate(null);
+		dateChooser_1.setDate(null);
+	}
+
+	private void handleSubmit() {
+		String Name = textField.getText();
+		String Gender = (String) comboBox_1.getSelectedItem();
+		String EmployeeID = textField_3.getText();
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		String Birthdate = dateFormat.format(dateChooser.getDate());
+		String Age = textField_4.getText();
+		String Maritalstatus = (String) comboBox_1_1.getSelectedItem();
+		String Nationality = (String) comboBox_1_2.getSelectedItem();
+		String State = (String) comboBox_1_3.getSelectedItem();
+		String Address = textField_8.getText();
+		String Mobilephone = textField_9.getText();
+		String Email = textField_10.getText();
+		String Status = (String) comboBox_1_4.getSelectedItem();
+		String Supervisor = textField_12.getText();
+		String Hireddate = dateFormat.format(dateChooser_1.getDate());
+		String Department = textField_14.getText(); 
+		    
+		 if (Mobilephone.length() != 10) {
+		        // Change the appropriate label in your code
+		        textField_9.setText("Mobile number must be 10 digits");
+		        textField_9.setForeground(java.awt.Color.RED);
+		        return; // Return to stop further processing
+		    } else {
+		        // Change the appropriate label in your code
+		        textField_9.setText("");
+		    }
+		
+
+       
+
+		try {
+			Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/employee", "root", "Sridevi@123");
+			String query = "INSERT INTO employee (Name, Gender, EmployeeID, Birthdate, Age, Maritalstatus, Nationality, State, Address, Mobilephone, Email, Status, Supervisor, Hireddate, Department) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+			PreparedStatement pst = connection.prepareStatement(query);
+			pst.setString(1, Name);
+			pst.setString(2, Gender);
+			pst.setString(3, EmployeeID);
+			pst.setString(4, Birthdate);
+			pst.setString(5, Age);
+			pst.setString(6, Maritalstatus);
+			pst.setString(7, Nationality);
+			pst.setString(8, State);
+			pst.setString(9, Address);
+			pst.setString(10, Mobilephone);
+			pst.setString(11, Email);
+			pst.setString(12, Status);
+			pst.setString(13, Supervisor);
+			pst.setString(14, Hireddate); 
+	        pst.setString(15, Department); 
+
+
+			int rowsAffected = pst.executeUpdate();
+			if (rowsAffected > 0) {
+				JOptionPane.showMessageDialog(null, "Data Inserted Successfully");
+				new employeelist().setVisible(true);
+	
+			    
+			} else {
+				JOptionPane.showMessageDialog(null, "Data Insertion Failed");
+			
+			}
+
+			pst.close();
+			connection.close();
+		    } 
+		    catch (SQLException ex) {
+			ex.printStackTrace();
+		}
+	}
+}

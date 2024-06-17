@@ -1,0 +1,270 @@
+import java.awt.EventQueue;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JButton;
+import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
+import javax.swing.JComboBox;
+import javax.swing.DefaultComboBoxModel;
+import java.awt.Font;
+import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.awt.event.ActionEvent;
+import java.awt.Color;
+import com.toedter.calendar.JDateChooser;
+
+public class updatetraining extends JFrame {
+
+    private static final long serialVersionUID = 1L;
+    private JPanel contentPane;
+    private JTextField textField;
+    private JTextField textField_1;
+    private JComboBox<String> comboBox_1_1;
+    private JTextField textField_3;
+    private JDateChooser dateChooser;
+    private JDateChooser dateChooser_1;
+    private JTextField textField_7;
+    private JTextField textField_8;
+    private JComboBox<String> comboBox_1_1_1;
+    private JComboBox<String> comboBox_1;
+    private JComboBox<String> comboBox_1_2;
+
+    /**
+     * Launch the application.
+     */
+    public static void main(String[] args) {
+        EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                try {
+                    updatetraining frame = new updatetraining();
+                    frame.setVisible(true);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+
+    /**
+     * Create the frame.
+     */
+    public updatetraining() {
+        setBackground(new Color(64, 128, 128));
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setBounds(100, 100, 639, 747);
+        contentPane = new JPanel();
+        contentPane.setBackground(new Color(31, 53, 56));
+        contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+
+        setContentPane(contentPane);
+        contentPane.setLayout(null);
+
+        JLabel lblTrainingDetails = new JLabel("Training Details");
+        lblTrainingDetails.setForeground(new Color(192, 192, 192));
+        lblTrainingDetails.setFont(new Font("Tahoma", Font.BOLD, 37));
+        lblTrainingDetails.setBounds(155, 0, 331, 47);
+        contentPane.add(lblTrainingDetails);
+
+        JLabel lblNewLabel_1 = new JLabel("Trainer ID");
+        lblNewLabel_1.setForeground(new Color(192, 192, 192));
+        lblNewLabel_1.setFont(new Font("Tahoma", Font.PLAIN, 21));
+        lblNewLabel_1.setBounds(72, 92, 203, 25);
+        contentPane.add(lblNewLabel_1);
+
+        JLabel lblNewLabel_1_1 = new JLabel("Trainer name");
+        lblNewLabel_1_1.setForeground(new Color(192, 192, 192));
+        lblNewLabel_1_1.setFont(new Font("Tahoma", Font.PLAIN, 21));
+        lblNewLabel_1_1.setBounds(72, 136, 203, 25);
+        contentPane.add(lblNewLabel_1_1);
+
+        JLabel lblNewLabel_1_2 = new JLabel("Trainer type");
+        lblNewLabel_1_2.setForeground(new Color(192, 192, 192));
+        lblNewLabel_1_2.setFont(new Font("Tahoma", Font.PLAIN, 21));
+        lblNewLabel_1_2.setBounds(72, 177, 203, 25);
+        contentPane.add(lblNewLabel_1_2);
+
+        JLabel lblNewLabel_1_3 = new JLabel("Training category");
+        lblNewLabel_1_3.setForeground(new Color(192, 192, 192));
+        lblNewLabel_1_3.setFont(new Font("Tahoma", Font.PLAIN, 21));
+        lblNewLabel_1_3.setBounds(72, 223, 203, 25);
+        contentPane.add(lblNewLabel_1_3);
+
+        JLabel lblNewLabel_1_4 = new JLabel("Skill level");
+        lblNewLabel_1_4.setForeground(new Color(192, 192, 192));
+        lblNewLabel_1_4.setFont(new Font("Tahoma", Font.PLAIN, 21));
+        lblNewLabel_1_4.setBounds(72, 271, 203, 25);
+        contentPane.add(lblNewLabel_1_4);
+
+        JLabel lblNewLabel_1_5 = new JLabel("Start date");
+        lblNewLabel_1_5.setForeground(new Color(192, 192, 192));
+        lblNewLabel_1_5.setFont(new Font("Tahoma", Font.PLAIN, 21));
+        lblNewLabel_1_5.setBounds(72, 322, 203, 25);
+        contentPane.add(lblNewLabel_1_5);
+
+        JLabel lblNewLabel_1_6 = new JLabel("End date");
+        lblNewLabel_1_6.setForeground(new Color(192, 192, 192));
+        lblNewLabel_1_6.setFont(new Font("Tahoma", Font.PLAIN, 21));
+        lblNewLabel_1_6.setBounds(72, 369, 203, 25);
+        contentPane.add(lblNewLabel_1_6);
+
+        JLabel lblNewLabel_1_7 = new JLabel("Cost");
+        lblNewLabel_1_7.setForeground(new Color(192, 192, 192));
+        lblNewLabel_1_7.setFont(new Font("Tahoma", Font.PLAIN, 21));
+        lblNewLabel_1_7.setBounds(72, 423, 203, 25);
+        contentPane.add(lblNewLabel_1_7);
+
+        JLabel lblNewLabel_1_8 = new JLabel("Training hours");
+        lblNewLabel_1_8.setForeground(new Color(192, 192, 192));
+        lblNewLabel_1_8.setFont(new Font("Tahoma", Font.PLAIN, 21));
+        lblNewLabel_1_8.setBounds(72, 468, 203, 25);
+        contentPane.add(lblNewLabel_1_8);
+
+        JLabel lblNewLabel_1_9 = new JLabel("Enrollment");
+        lblNewLabel_1_9.setForeground(new Color(192, 192, 192));
+        lblNewLabel_1_9.setFont(new Font("Tahoma", Font.PLAIN, 21));
+        lblNewLabel_1_9.setBounds(72, 514, 203, 25);
+        contentPane.add(lblNewLabel_1_9);
+
+        JLabel lblNewLabel_1_10 = new JLabel("Status");
+        lblNewLabel_1_10.setForeground(new Color(192, 192, 192));
+        lblNewLabel_1_10.setFont(new Font("Tahoma", Font.PLAIN, 21));
+        lblNewLabel_1_10.setBounds(72, 561, 203, 25);
+        contentPane.add(lblNewLabel_1_10);
+
+        JButton btnNewButton = new JButton("Submit");
+        btnNewButton.setBackground(new Color(28, 55, 55));
+        btnNewButton.setForeground(new Color(192, 192, 192));
+        btnNewButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                String TrainerID = textField.getText();
+                String Trainername = textField_1.getText();
+                String Trainertype = (String) comboBox_1_1.getSelectedItem();
+                String Trainingcategory = textField_3.getText();
+                String Skilllevel = (String) comboBox_1_1_1.getSelectedItem();
+                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                String Startdate = dateFormat.format(dateChooser.getDate());
+                String Enddate = dateFormat.format(dateChooser_1.getDate());
+                String Cost = textField_7.getText();
+                String Traininghours = textField_8.getText();
+                String Enrollment = (String) comboBox_1_2.getSelectedItem();
+                String Status = (String) comboBox_1.getSelectedItem();
+
+                try {
+                    Class.forName("com.mysql.cj.jdbc.Driver");
+                    Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/training", "root", "Sridevi@123");
+
+                    PreparedStatement pst = con.prepareStatement("update training set Trainername=?, Trainertype=?, Trainingcategory=?, Skilllevel=?, Startdate=?, Enddate=?, Cost=?, Traininghours=?, Enrollment=?, Status=? where TrainerID=?");
+
+                    pst.setString(1, Trainername);
+                    pst.setString(2, Trainertype);
+                    pst.setString(3, Trainingcategory);
+                    pst.setString(4, Skilllevel);
+                    pst.setString(5, Startdate);
+                    pst.setString(6, Enddate);
+                    pst.setString(7, Cost);
+                    pst.setString(8, Traininghours);
+                    pst.setString(9, Enrollment);
+                    pst.setString(10, Status);
+                    pst.setString(11, TrainerID);
+
+                    int rowsAffected = pst.executeUpdate();
+                    if (rowsAffected > 0) {
+                        JOptionPane.showMessageDialog(null, "Successfully updated");
+                        setVisible(false);
+                        new Training().setVisible(true); // Replace this with your main class if different
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Failed to update");
+                    }
+
+                    pst.close();
+                    con.close();
+                } catch (SQLException | ClassNotFoundException e1) {
+                    e1.printStackTrace();
+                    // Handle any SQL errors or class loading exceptions
+                }
+            }
+        });
+        btnNewButton.setFont(new Font("Tahoma", Font.BOLD, 30));
+        btnNewButton.setBounds(342, 625, 157, 47);
+        contentPane.add(btnNewButton);
+
+        textField = new JTextField();
+        textField.setBounds(277, 92, 269, 25);
+        contentPane.add(textField);
+        textField.setColumns(10);
+
+        textField_1 = new JTextField();
+        textField_1.setBounds(277, 136, 269, 25);
+        contentPane.add(textField_1);
+        textField_1.setColumns(10);
+
+        textField_3 = new JTextField();
+        textField_3.setBounds(277, 223, 269, 25);
+        contentPane.add(textField_3);
+        textField_3.setColumns(10);
+
+        textField_7 = new JTextField();
+        textField_7.setBounds(277, 423, 269, 25);
+        contentPane.add(textField_7);
+        textField_7.setColumns(10);
+
+        textField_8 = new JTextField();
+        textField_8.setBounds(277, 468, 269, 25);
+        contentPane.add(textField_8);
+        textField_8.setColumns(10);
+
+        dateChooser = new JDateChooser();
+        dateChooser.setBounds(277, 322, 269, 25);
+        contentPane.add(dateChooser);
+
+        dateChooser_1 = new JDateChooser();
+        dateChooser_1.setBounds(277, 369, 269, 25);
+        contentPane.add(dateChooser_1);
+
+        comboBox_1_1 = new JComboBox<String>();
+        comboBox_1_1.setModel(new DefaultComboBoxModel(new String[] {"------------------Select Trainer type----------------", "Internal Trainer", "External Trainer"}));
+        comboBox_1_1.setBounds(277, 183, 269, 25);
+        contentPane.add(comboBox_1_1);
+
+        comboBox_1_1_1 = new JComboBox<String>();
+        comboBox_1_1_1.setModel(new DefaultComboBoxModel(new String[] {"------------------Select skill level-------------------", "Beginner", "Intermediate", "Expert"}));
+        comboBox_1_1_1.setBounds(277, 271, 269, 25);
+        contentPane.add(comboBox_1_1_1);
+
+        comboBox_1 = new JComboBox<String>();
+        comboBox_1.setModel(new DefaultComboBoxModel(new String[] {"----------------------Select status--------------------", "Completed", "Uncompleted", "On-going"}));
+        comboBox_1.setBounds(277, 561, 269, 25);
+        contentPane.add(comboBox_1);
+
+        comboBox_1_2 = new JComboBox<String>();
+        comboBox_1_2.setModel(new DefaultComboBoxModel(new String[] {"----------------Select enrollment--------------------", "Online", "Offline"}));
+        comboBox_1_2.setBounds(277, 514, 269, 25);
+        contentPane.add(comboBox_1_2);
+        
+        JButton btnBack = new JButton("Back");
+        btnBack.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		try {
+					new Training().setVisible(true);
+					SwingUtilities.windowForComponent(btnNewButton).dispose();
+				}
+				catch(Exception o) {
+					JOptionPane.showMessageDialog(btnNewButton,this,"Error while establishing connection failed",0);
+				}
+        		
+        	}
+        });
+        btnBack.setBackground(new Color(28, 55, 55));
+        btnBack.setForeground(Color.LIGHT_GRAY);
+        btnBack.setFont(new Font("Tahoma", Font.BOLD, 30));
+        btnBack.setBounds(83, 625, 157, 47);
+        contentPane.add(btnBack);
+    }
+}

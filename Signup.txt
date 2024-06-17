@@ -1,0 +1,255 @@
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+import java.sql.*;
+import java.util.Random;
+import java.util.regex.*;
+
+public class signup extends JFrame {
+
+    private static final long serialVersionUID = 1L;
+    private JPanel contentPane;
+    private JTextField newuser;
+    private JPasswordField newpass;
+    private JTextField captchaInput;
+    private JLabel captchaLabel;
+    private JLabel passwordStrengthLabel;
+    private String captcha;
+
+    public static void main(String[] args) {
+        EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                try {
+                    signup frame = new signup();
+                    frame.setVisible(true);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+
+    public signup() {
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setBounds(200, 200, 851, 527);
+        contentPane = new JPanel();
+        contentPane.setBackground(new Color(31, 53, 56));
+        contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+        setContentPane(contentPane);
+        contentPane.setLayout(null);
+
+        JLabel newuser1 = new JLabel("Username");
+        newuser1.setForeground(new Color(192, 192, 192));
+        newuser1.setFont(new Font("Times New Roman", Font.BOLD, 35));
+        newuser1.setBounds(116, 123, 199, 34);
+        contentPane.add(newuser1);
+
+        JLabel newpass1 = new JLabel("Password");
+        newpass1.setForeground(new Color(192, 192, 192));
+        newpass1.setFont(new Font("Times New Roman", Font.BOLD, 35));
+        newpass1.setBounds(118, 199, 185, 34);
+        contentPane.add(newpass1);
+
+        newuser = new JTextField();
+        newuser.setBounds(381, 133, 262, 35);
+        contentPane.add(newuser);
+        newuser.setColumns(10);
+
+        newpass = new JPasswordField();
+        newpass.setBounds(379, 199, 264, 34);
+        contentPane.add(newpass);
+        newpass.setColumns(10);
+
+        passwordStrengthLabel = new JLabel("");
+        passwordStrengthLabel.setFont(new Font("Tahoma", Font.PLAIN, 18));
+        passwordStrengthLabel.setBounds(379, 243, 264, 25);
+        contentPane.add(passwordStrengthLabel);
+
+        newpass.addKeyListener(new KeyAdapter() {
+            public void keyReleased(KeyEvent e) {
+                String passwordPattern = "^(?=.[A-Za-z])(?=.\\d)(?=.[@$!%?&])[A-Za-z\\d@$!%?&]{8,}$";
+                Pattern pat = Pattern.compile(passwordPattern);
+                Matcher matcher = pat.matcher(new String(newpass.getPassword()));
+                if (!matcher.matches()) {
+                    passwordStrengthLabel.setText("Weak Password");
+                    passwordStrengthLabel.setForeground(Color.RED);
+                } else {
+                    passwordStrengthLabel.setText("Strong Password");
+                    passwordStrengthLabel.setForeground(Color.GREEN);
+                }
+            }
+        });
+
+        JLabel captchaText = new JLabel("CAPTCHA");
+        captchaText.setForeground(new Color(192, 192, 192));
+        captchaText.setFont(new Font("Times New Roman", Font.BOLD, 35));
+        captchaText.setBounds(116, 265, 185, 34);
+        contentPane.add(captchaText);
+
+        captchaLabel = new JLabel();
+        captchaLabel.setForeground(new Color(192, 192, 192));
+        captchaLabel.setFont(new Font("Tahoma", Font.BOLD, 35));
+        captchaLabel.setBounds(381, 265, 227, 46);
+        contentPane.add(captchaLabel);
+
+        captchaInput = new JTextField();
+        captchaInput.setBounds(381, 318, 227, 34);
+        contentPane.add(captchaInput);
+        captchaInput.setColumns(10);
+
+        JButton refreshCaptcha = new JButton("Refresh CAPTCHA");
+        refreshCaptcha.setForeground(new Color(192, 192, 192));
+        refreshCaptcha.setFont(new Font("Tahoma", Font.PLAIN, 12));
+        refreshCaptcha.setBackground(new Color(31, 53, 56));
+        refreshCaptcha.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                generateCaptcha();
+            }
+        });
+        refreshCaptcha.setBounds(647, 265, 180, 34);
+        contentPane.add(refreshCaptcha);
+
+        generateCaptcha();
+
+        JButton signupButton = new JButton("SIGNUP");
+        signupButton.setForeground(new Color(192, 192, 192));
+        signupButton.setBackground(new Color(31, 53, 56));
+        signupButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                String username = newuser.getText();
+                String password = new String(newpass.getPassword());
+                String inputCaptcha = captchaInput.getText();
+
+                if (isPasswordStrong(password) && inputCaptcha.equals(captcha)) {
+                    handleSignup(username, password);
+                } else {
+                    if (!isPasswordStrong(password)) {
+                        JOptionPane.showMessageDialog(null, "Password is too weak", "Error", JOptionPane.ERROR_MESSAGE);
+                    }
+                    if (!inputCaptcha.equals(captcha)) {
+                        JOptionPane.showMessageDialog(null, "Invalid CAPTCHA", "Error", JOptionPane.ERROR_MESSAGE);
+                        generateCaptcha();
+                    }
+                }
+            }
+        });
+        signupButton.setFont(new Font("Tahoma", Font.BOLD, 29));
+        signupButton.setBounds(276, 365, 245, 46);
+        contentPane.add(signupButton);
+
+        JLabel welcomeLabel = new JLabel("WELCOME TO SIGNUP");
+        welcomeLabel.setForeground(new Color(192, 192, 192));
+        welcomeLabel.setFont(new Font("Times New Roman", Font.BOLD, 41));
+        welcomeLabel.setBounds(197, 10, 506, 46);
+        contentPane.add(welcomeLabel);
+
+        JLabel haveAccountLabel = new JLabel("Have an account?");
+        haveAccountLabel.setForeground(new Color(192, 192, 192));
+        haveAccountLabel.setFont(new Font("Times New Roman", Font.BOLD, 15));
+        haveAccountLabel.setBounds(286, 430, 148, 19);
+        contentPane.add(haveAccountLabel);
+
+        JButton loginButton = new JButton("Login");
+        loginButton.setForeground(new Color(192, 192, 192));
+        loginButton.setBackground(new Color(31, 53, 56));
+        loginButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                new Loginpge().setVisible(true);
+                dispose();
+            }
+        });
+        loginButton.setFont(new Font("Tahoma", Font.BOLD, 16));
+        loginButton.setBounds(424, 421, 97, 34);
+        contentPane.add(loginButton);
+
+        JRadioButton rdbtnNewRadioButton = new JRadioButton("Show Password");
+        rdbtnNewRadioButton.setForeground(new Color(192, 192, 192));
+        rdbtnNewRadioButton.setBackground(new Color(31, 53, 56));
+        rdbtnNewRadioButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (rdbtnNewRadioButton.isSelected()) {
+                    newpass.setEchoChar((char) 0);
+                } else {
+                    newpass.setEchoChar('*');
+                }
+            }
+        });
+        rdbtnNewRadioButton.setFont(new Font("Times New Roman", Font.BOLD, 14));
+        rdbtnNewRadioButton.setBounds(679, 205, 148, 21);
+        contentPane.add(rdbtnNewRadioButton);
+    }
+
+    private void generateCaptcha() {
+        captcha = createCaptcha();
+        captchaLabel.setText(captcha);
+    }
+
+    public static String createCaptcha() {
+        Random rand = new Random();
+        int length = 7 + (Math.abs(rand.nextInt()) % 3);
+        StringBuilder captcha = new StringBuilder();
+        for (int i = 0; i < length; i++) {
+            int base = Math.abs(rand.nextInt()) % 62;
+            char charN;
+            if (base < 26) {
+                charN = (char) (65 + base);
+            } else if (base < 52) {
+                charN = (char) (97 + (base - 26));
+            } else {
+                charN = (char) (48 + (base - 52));
+            }
+            captcha.append(charN);
+        }
+        return captcha.toString();
+    }
+
+    private boolean isPasswordStrong(String password) {
+        String passwordPattern = "^(?=.[A-Za-z])(?=.\\d)(?=.[@$!%?&])[A-Za-z\\d@$!%?&]{8,}$";
+        Pattern pat = Pattern.compile(passwordPattern);
+        Matcher matcher = pat.matcher(password);
+        return matcher.matches();
+    }
+
+    private void handleSignup(String username, String password) {
+        // Check if the username or password fields are empty (though this might already be checked before calling this method)
+        if (username.isEmpty() || password.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Username or Password cannot be empty", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        // Debugging statements
+        System.out.println("Username: " + username);
+        System.out.println("Password: " + password); // Not recommended in real-world applications due to security
+
+        // Connect to the database and insert the new user
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        try {
+            conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/loginpage", "root", "Sridevi@123");
+            String sql = "INSERT INTO loginpage (username, password) VALUES (?, ?)";
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, username);
+            pstmt.setString(2, password);
+            int rowsInserted = pstmt.executeUpdate();
+            if (rowsInserted > 0) {
+                JOptionPane.showMessageDialog(this, "Signup successful", "Success", JOptionPane.INFORMATION_MESSAGE);
+                new Dashboardpage().setVisible(true);
+                dispose();
+            } else {
+                JOptionPane.showMessageDialog(this, "Signup failed", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Database error", "Error", JOptionPane.ERROR_MESSAGE);
+        } finally {
+            try {
+                if (pstmt != null) pstmt.close();
+                if (conn != null) conn.close();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+        }
+    }
+}

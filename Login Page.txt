@@ -1,0 +1,222 @@
+[21:20, 17/06/2024] Sri Devi: import java.awt.Component;
+import java.awt.EventQueue;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
+import javax.swing.JLabel;
+import java.awt.Font;
+import javax.swing.JRadioButton;
+import javax.swing.JButton;
+import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.awt.event.ActionListener;
+import java.beans.Statement;
+import java.sql.ResultSet;
+import java.awt.event.ActionEvent;
+import javax.swing.JOptionPane;
+import javax.swing.ImageIcon;
+import javax.swing.JCheckBox;
+import java.awt.Toolkit;
+import java.awt.Color;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import javax.swing.JPasswordField;
+public class Loginpge extends JFrame {
+
+	private static final long serialVersionUID = 1L;
+	private JPanel contentPane;
+	private JTextField user;
+	private JPasswordField pass;
+
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					Loginpge frame = new Loginpge();
+					frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
+	/**
+	 * Create the frame.
+	 */
+	public Loginpge() {
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setBounds(100, 100, 854, 571);
+		contentPane = new JPanel();
+		contentPane.setBackground(new Color(31, 53, 56));
+		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+
+		setContentPane(contentPane);
+		contentPane.setLayout(null);
+		
+		JLabel lblNewLabel = new JLabel("LOGIN");
+		lblNewLabel.setForeground(new Color(192, 192, 192));
+		lblNewLabel.setFont(new Font("Times New Roman", Font.BOLD, 47));
+		lblNewLabel.setBounds(331, 10, 176, 37);
+		contentPane.add(lblNewLabel);
+		
+		JLabel lblNewLabel_1 = new JLabel("Username");
+		lblNewLabel_1.setForeground(new Color(192, 192, 192));
+		lblNewLabel_1.setFont(new Font("Times New Roman", Font.BOLD, 40));
+		lblNewLabel_1.setBounds(69, 125, 182, 37);
+		contentPane.add(lblNewLabel_1);
+		
+		JLabel lblNewLabel_2 = new JLabel("Password");
+		lblNewLabel_2.setForeground(new Color(192, 192, 192));
+		lblNewLabel_2.setFont(new Font("Times New Roman", Font.BOLD, 40));
+		lblNewLabel_2.setBounds(69, 207, 182, 37);
+		contentPane.add(lblNewLabel_2);
+		
+		JButton btnNewButton = new JButton("Forgot your password?");
+		btnNewButton.setForeground(new Color(192, 192, 192));
+		btnNewButton.setBackground(new Color(30, 60, 60));
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					new Passwordresetpage().setVisible(true);
+					SwingUtilities.windowForComponent(btnNewButton).dispose();
+				}
+				catch(Exception o) {
+					JOptionPane.showMessageDialog(btnNewButton,this,"Error while establishing connection failed",0);
+				}
+			}
+		});
+		btnNewButton.setFont(new Font("Tahoma", Font.PLAIN, 17));
+		btnNewButton.setBounds(331, 256, 226, 29);
+		contentPane.add(btnNewButton);
+		
+		user = new JTextField();
+		user.setBounds(297, 125, 260, 37);
+		contentPane.add(user);
+		user.setColumns(10);
+		
+		JButton btnNewButton_1 = new JButton("Sign in");
+		btnNewButton_1.setForeground(new Color(192, 192, 192));
+		btnNewButton_1.setBackground(new Color(31, 53, 56));
+		btnNewButton_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				 try {
+			            String us = user.getText();
+			            String ps = new String(pass.getPassword()); // Use getPassword for JPasswordField
+
+			            if (us.isEmpty() || ps.isEmpty()) {
+			                JOptionPane.showMessageDialog(null, "Username and Password cannot be empty");
+			                return;
+			            }
+
+			            System.out.println(us);
+			            Class.forName("com.mysql.cj.jdbc.Driver");
+			            System.out.println(ps);
+			            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/loginpage", "root", "Sridevi@123");
+			            System.out.println("1");
+			            java.sql.Statement st = con.createStatement();
+			            System.out.println("1");
+			            String sql = "SELECT * FROM loginpage";
+			            System.out.println("1");
+			            ResultSet rs = st.executeQuery(sql);
+			            System.out.println("1");
+
+			            boolean userFound = false;
+			            boolean passwordCorrect = false;
+
+			            while (rs.next()) {
+			                String username = rs.getString("Username");
+			                System.out.println("1-");
+			                String password = rs.getString("Password");
+			                System.out.println("1-");
+
+			                if (us.equals(username)) {
+			                    userFound = true;
+			                    if (ps.equals(password)) {
+			                        passwordCorrect = true;
+			                        break; // Exit the loop since we found the matching username and password
+			                    }
+			                }
+			            }
+
+			            if (userFound && passwordCorrect) {
+			                new Dashboardpage().setVisible(true);
+			                System.out.println("true");
+			                SwingUtilities.windowForComponent(user).dispose();
+			            } else if (userFound) {
+			                JOptionPane.showMessageDialog(null, "Password is incorrect");
+			                pass.setText("");
+			            } else {
+			                JOptionPane.showMessageDialog(null, "Username doesn't exist");
+			                user.setText("");
+			                pass.setText("");
+			            }
+			        } catch (Exception o) {
+			            JOptionPane.showMessageDialog(null, "Error while establishing connection: " + o.getMessage());
+			        }
+			    }
+		});
+		btnNewButton_1.setFont(new Font("Tahoma", Font.BOLD, 24));
+		btnNewButton_1.setBounds(277, 354, 280, 37);
+		contentPane.add(btnNewButton_1);
+		
+		JLabel lblNewLabel_3 = new JLabel("Don't have an account?");
+		lblNewLabel_3.setForeground(new Color(192, 192, 192));
+		lblNewLabel_3.setBackground(new Color(31, 53, 56));
+		lblNewLabel_3.setFont(new Font("Tahoma", Font.PLAIN, 17));
+		lblNewLabel_3.setBounds(281, 405, 184, 21);
+		contentPane.add(lblNewLabel_3);
+		
+		JButton btnNewButton_2 = new JButton("Sign Up");
+		btnNewButton_2.setForeground(new Color(192, 192, 192));
+		btnNewButton_2.setBackground(new Color(31, 53, 56));
+		btnNewButton_2.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					new signup().setVisible(true);
+					SwingUtilities.windowForComponent(btnNewButton).dispose();
+				}
+				catch(Exception o) {
+					JOptionPane.showMessageDialog(btnNewButton,this,"Error while establishing connection failed",0);
+				}
+			}
+		});
+		btnNewButton_2.setFont(new Font("Tahoma", Font.PLAIN, 17));
+		btnNewButton_2.setBounds(458, 401, 99, 29);
+		contentPane.add(btnNewButton_2);
+		
+		JCheckBox chckbxNewCheckBox_1 = new JCheckBox("Remember me");
+		chckbxNewCheckBox_1.setForeground(new Color(192, 192, 192));
+		chckbxNewCheckBox_1.setBackground(new Color(31, 53, 56));
+		chckbxNewCheckBox_1.setFont(new Font("Tahoma", Font.PLAIN, 17));
+		chckbxNewCheckBox_1.setBounds(86, 263, 148, 21);
+		contentPane.add(chckbxNewCheckBox_1);
+		
+		JRadioButton rdbtnNewRadioButton = new JRadioButton("Show Password");
+		rdbtnNewRadioButton.setForeground(new Color(192, 192, 192));
+		rdbtnNewRadioButton.setBackground(new Color(31, 53, 56));
+		rdbtnNewRadioButton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mousePressed(MouseEvent e) {
+				if(rdbtnNewRadioButton.isSelected()) {
+					pass.setEchoChar((char)0);
+				}
+				else {
+					pass.setEchoChar('*');
+				}
+			}
+		});
+		rdbtnNewRadioButton.setFont(new Font("Times New Roman", Font.BOLD, 17));
+		rdbtnNewRadioButton.setBounds(591, 214, 148, 21);
+		contentPane.add(rdbtnNewRadioButton);
+		
+		pass = new JPasswordField();
+		pass.setBounds(297, 207, 260, 37);
+		contentPane.add(pass);
+	}
+}

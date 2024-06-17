@@ -1,0 +1,223 @@
+import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableModel;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.sql.*;
+
+public class Performancepage extends JFrame {
+
+    private JPanel contentPane;
+    private JTextField textFieldEmployeeID;
+    private JTextField textFieldName;
+    private JTextField textFieldDepartment;
+    private JTable tableScores;
+    private JTextField textFieldGainedScore;
+    private JTextField textFieldPerformancePercentage;
+
+    public static void main(String[] args) {
+        EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                try {
+                    Performancepage frame = new Performancepage();
+                    frame.setVisible(true);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+
+    public Performancepage() {
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setBounds(100, 100, 742, 600);
+        contentPane = new JPanel();
+        contentPane.setBackground(new Color(31, 53, 56));
+        contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+        setContentPane(contentPane);
+        contentPane.setLayout(null);
+
+        JLabel lblPerformanceCalculation = new JLabel("Employee Performance Calculation");
+        lblPerformanceCalculation.setForeground(new Color(192, 192, 192));
+        lblPerformanceCalculation.setFont(new Font("Times New Roman", Font.BOLD, 22));
+        lblPerformanceCalculation.setBounds(185, 10, 385, 30);
+        contentPane.add(lblPerformanceCalculation);
+
+        JLabel lblEmployeeID = new JLabel("Employee ID:");
+        lblEmployeeID.setForeground(new Color(192, 192, 192));
+        lblEmployeeID.setFont(new Font("Tahoma", Font.PLAIN, 16));
+        lblEmployeeID.setBounds(50, 60, 150, 25);
+        contentPane.add(lblEmployeeID);
+
+        textFieldEmployeeID = new JTextField();
+        textFieldEmployeeID.setBounds(250, 60, 250, 25);
+        contentPane.add(textFieldEmployeeID);
+        textFieldEmployeeID.setColumns(10);
+
+        JButton btnFetchDetails = new JButton("Fetch Details");
+        btnFetchDetails.setForeground(new Color(192, 192, 192));
+        btnFetchDetails.setBackground(new Color(31, 53, 56));
+        btnFetchDetails.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                String employeeID = textFieldEmployeeID.getText();
+                fetchEmployeeDetails(employeeID);
+            }
+        });
+        btnFetchDetails.setFont(new Font("Tahoma", Font.BOLD, 16));
+        btnFetchDetails.setBounds(520, 60, 150, 25);
+        contentPane.add(btnFetchDetails);
+
+        JLabel lblName = new JLabel("Name:");
+        lblName.setForeground(new Color(192, 192, 192));
+        lblName.setFont(new Font("Tahoma", Font.PLAIN, 16));
+        lblName.setBounds(50, 100, 150, 25);
+        contentPane.add(lblName);
+
+        textFieldName = new JTextField();
+        textFieldName.setBounds(250, 100, 250, 25);
+        contentPane.add(textFieldName);
+        textFieldName.setColumns(10);
+        textFieldName.setEditable(false);
+
+        JLabel lblDepartment = new JLabel("Department:");
+        lblDepartment.setForeground(new Color(192, 192, 192));
+        lblDepartment.setFont(new Font("Tahoma", Font.PLAIN, 16));
+        lblDepartment.setBounds(50, 140, 150, 25);
+        contentPane.add(lblDepartment);
+
+        textFieldDepartment = new JTextField();
+        textFieldDepartment.setBounds(250, 140, 250, 25);
+        contentPane.add(textFieldDepartment);
+        textFieldDepartment.setColumns(10);
+        textFieldDepartment.setEditable(false);
+
+        JLabel lblCompetencyScores = new JLabel("Competency Scores:");
+        lblCompetencyScores.setForeground(new Color(192, 192, 192));
+        lblCompetencyScores.setFont(new Font("Tahoma", Font.PLAIN, 16));
+        lblCompetencyScores.setBounds(50, 180, 200, 25);
+        contentPane.add(lblCompetencyScores);
+
+        JScrollPane scrollPane = new JScrollPane();
+        scrollPane.setBounds(50, 220, 600, 150);
+        contentPane.add(scrollPane);
+
+        tableScores = new JTable();
+        scrollPane.setViewportView(tableScores);
+        tableScores.setModel(new DefaultTableModel(
+        	new Object[][] {
+        		{"Quality of Work", ""},
+        		{"Attendance", ""},
+        		{"Teamwork", ""},
+        		{"Innovation", ""},
+        		{"Communication", ""},
+        	},
+        	new String[] {
+        		"Competency", "Score"
+        	}
+        ));
+
+        JLabel lblGainedScore = new JLabel("Gained Score:");
+        lblGainedScore.setForeground(new Color(192, 192, 192));
+        lblGainedScore.setFont(new Font("Tahoma", Font.PLAIN, 16));
+        lblGainedScore.setBounds(50, 390, 150, 25);
+        contentPane.add(lblGainedScore);
+
+        textFieldGainedScore = new JTextField();
+        textFieldGainedScore.setEditable(false);
+        textFieldGainedScore.setBounds(250, 390, 250, 25);
+        contentPane.add(textFieldGainedScore);
+        textFieldGainedScore.setColumns(10);
+
+        JLabel lblPerformancePercentage = new JLabel("Performance %:");
+        lblPerformancePercentage.setForeground(new Color(192, 192, 192));
+        lblPerformancePercentage.setFont(new Font("Tahoma", Font.PLAIN, 16));
+        lblPerformancePercentage.setBounds(50, 430, 150, 25);
+        contentPane.add(lblPerformancePercentage);
+
+        textFieldPerformancePercentage = new JTextField();
+        textFieldPerformancePercentage.setEditable(false);
+        textFieldPerformancePercentage.setBounds(250, 430, 250, 25);
+        contentPane.add(textFieldPerformancePercentage);
+        textFieldPerformancePercentage.setColumns(10);
+
+        JButton btnCalculate = new JButton("Calculate");
+        btnCalculate.setBackground(new Color(31, 53, 56));
+        btnCalculate.setForeground(new Color(192, 192, 192));
+        btnCalculate.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                calculatePerformance();
+            }
+        });
+        btnCalculate.setFont(new Font("Tahoma", Font.BOLD, 18));
+        btnCalculate.setBounds(274, 480, 150, 30);
+        contentPane.add(btnCalculate);
+        
+        JButton btnNewButton = new JButton("Back");
+        btnNewButton.setBackground(new Color(31, 53, 56));
+        btnNewButton.setForeground(new Color(192, 192, 192));
+        btnNewButton.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		try {
+					new Dashboardpage().setVisible(true);
+					SwingUtilities.windowForComponent(btnNewButton).dispose();
+				}
+				catch(Exception o) {
+					JOptionPane.showMessageDialog(btnNewButton,this,"Error while establishing connection failed",0);
+				}
+        	}
+        });
+        btnNewButton.setFont(new Font("Tahoma", Font.BOLD, 18));
+        btnNewButton.setBounds(68, 480, 85, 30);
+        contentPane.add(btnNewButton);
+    }
+
+    private void fetchEmployeeDetails(String employeeID) {
+        try {
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/employee","root", "Sridevi@123");
+            String query = "SELECT Name, Department FROM employee WHERE EmployeeID = ?";
+            PreparedStatement pst = con.prepareStatement(query);
+            pst.setString(1, employeeID);
+            ResultSet rs = pst.executeQuery();
+
+            if (rs.next()) {
+                textFieldName.setText(rs.getString("Name"));
+                textFieldDepartment.setText(rs.getString("Department"));
+            } else {
+                JOptionPane.showMessageDialog(null, "Employee not found");
+            }
+
+            rs.close();
+            pst.close();
+            con.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Error while fetching employee details");
+        }
+    }
+
+    private void calculatePerformance() {
+        try {
+            int totalGainedScore = 0;
+            int maxScore = 0;
+
+            DefaultTableModel model = (DefaultTableModel) tableScores.getModel();
+
+            for (int row = 0; row < model.getRowCount(); row++) {
+                String scoreStr = (String) model.getValueAt(row, 1);
+                if (!scoreStr.isEmpty()) {
+                    int score = Integer.parseInt(scoreStr);
+                    totalGainedScore += score;
+                }
+                maxScore += 100; // Assuming maximum score for each competency is 100
+            }
+
+            double performancePercentage = (totalGainedScore / (double) maxScore) * 100;
+
+            textFieldGainedScore.setText(String.valueOf(totalGainedScore));
+            textFieldPerformancePercentage.setText(String.format("%.2f", performancePercentage));
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(null, "Please enter valid scores");
+        }
+    }
+}

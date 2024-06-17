@@ -1,0 +1,132 @@
+import java.awt.EventQueue;
+import java.awt.Font;
+import java.awt.Color;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
+import javax.swing.border.EmptyBorder;
+
+import training.training;
+
+public class deletetraining extends JFrame {
+
+    private static final long serialVersionUID = 1L;
+    private JPanel contentPane;
+    private JTextField textField;
+
+    /**
+     * Launch the application.
+     */
+    public static void main(String[] args) {
+        EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                try {
+                    deletetraining frame = new deletetraining();
+                    frame.setVisible(true);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+
+    /**
+     * Create the frame.
+     */
+    public deletetraining() {
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setBounds(100, 100, 651, 458);
+        contentPane = new JPanel();
+        contentPane.setBackground(new Color(31, 53, 56));
+        contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+        setContentPane(contentPane);
+        contentPane.setLayout(null);
+
+        JLabel lblNewLabel = new JLabel("Trainer ID");
+        lblNewLabel.setForeground(new Color(228, 228, 228));
+        lblNewLabel.setFont(new Font("Times New Roman", Font.BOLD, 27));
+        lblNewLabel.setBounds(81, 100, 191, 27);
+        contentPane.add(lblNewLabel);
+
+        textField = new JTextField();
+        textField.setBackground(new Color(255, 255, 255));
+        textField.setBounds(296, 100, 264, 30);
+        contentPane.add(textField);
+        textField.setColumns(10);
+
+        JButton btnNewButton = new JButton("Submit");
+        btnNewButton.setForeground(new Color(228, 228, 228));
+        btnNewButton.setBackground(new Color(31, 53, 56));
+        btnNewButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                String TrainerID = textField.getText().trim(); // Trim whitespace
+
+                try {
+                    // Establish database connection
+                    Class.forName("com.mysql.cj.jdbc.Driver");
+                    Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/training", "root", "Sridevi@123");
+
+                    // Prepare delete statement
+                    PreparedStatement pst = con.prepareStatement("delete from training where TrainerID=?");
+                    pst.setString(1, TrainerID);
+
+                    // Execute the delete statement
+                    int rowsAffected = pst.executeUpdate();
+
+                    // Check if deletion was successful
+                    if (rowsAffected > 0) {
+                        JOptionPane.showMessageDialog(null, "Successfully Deleted");
+                        setVisible(false);
+                        new training().setVisible(true); // Assuming training is another JFrame class
+                    } else {
+                        JOptionPane.showMessageDialog(null, "No records found to delete");
+                    }
+
+                    // Close resources
+                    pst.close();
+                    con.close();
+                } catch (ClassNotFoundException | SQLException ex) {
+                    ex.printStackTrace();
+                    JOptionPane.showMessageDialog(null, "Failed to Delete: " + ex.getMessage());
+                }
+            }
+        });
+        btnNewButton.setFont(new Font("Tahoma", Font.BOLD, 29));
+        btnNewButton.setBounds(335, 203, 191, 43);
+        contentPane.add(btnNewButton);
+
+        JLabel lblNewLabel_3 = new JLabel("Enter Trainer ID to Remove");
+        lblNewLabel_3.setForeground(new Color(228, 228, 228));
+        lblNewLabel_3.setFont(new Font("Times New Roman", Font.BOLD, 30));
+        lblNewLabel_3.setBounds(144, 10, 426, 37);
+        contentPane.add(lblNewLabel_3);
+
+        JButton btnBack = new JButton("Back");
+        btnBack.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    new Training().setVisible(true); // Replace Training with your actual frame class
+                    SwingUtilities.windowForComponent(btnBack).dispose();
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(btnBack, "Error while opening Training window: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        });
+        btnBack.setForeground(new Color(228, 228, 228));
+        btnBack.setFont(new Font("Tahoma", Font.BOLD, 29));
+        btnBack.setBackground(new Color(31, 53, 56));
+        btnBack.setBounds(82, 203, 172, 43);
+        contentPane.add(btnBack);
+    }
+}

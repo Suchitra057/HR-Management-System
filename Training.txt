@@ -1,0 +1,219 @@
+import java.awt.Component;
+import java.awt.EventQueue;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import java.awt.Font;
+import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
+import javax.swing.JButton;
+import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.awt.event.ActionEvent;
+import javax.swing.ImageIcon;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.JScrollPane;
+import java.awt.Color;
+
+public class Training extends JFrame {
+
+	private static final long serialVersionUID = 1L;
+	private JPanel contentPane;
+	private JTable table;
+	private JScrollPane scrollPane;
+	private JButton btnNewButton_2;
+	private JButton btnNewButton_3;
+	private JButton btnNewButton_4;
+	private JButton btnNewButton;
+
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					Training frame = new Training();
+					frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
+	/**
+	 * Create the frame.
+	 */
+	public Training() {
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setBounds(100, 100, 1378, 628);
+		contentPane = new JPanel();
+		contentPane.setBackground(new Color(31, 53, 56));
+		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+
+		setContentPane(contentPane);
+		contentPane.setLayout(null);
+		
+		JLabel lblNewLabel = new JLabel("Training Details");
+		lblNewLabel.setForeground(new Color(192, 192, 192));
+		lblNewLabel.setFont(new Font("Times New Roman", Font.BOLD, 36));
+		lblNewLabel.setBounds(563, 11, 273, 37);
+		contentPane.add(lblNewLabel);
+		
+		scrollPane = new JScrollPane();
+		scrollPane.setBounds(276, 84, 1065, 456);
+		contentPane.add(scrollPane);
+		
+		table = new JTable();
+		scrollPane.setViewportView(table);
+		table.setModel(new DefaultTableModel(
+			new Object[][] {
+				{null, null, null, null, null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null, null, null, null, null},
+			},
+			new String[] {
+				"TRAINER ID", "TRAINER NAME", "TRAINER TYPE", "TRAINING CATEGORY", "SKILL LEVEL", "START DATE", "END DATE", "COST", "TRAINING HOURS", "ENROLLMENT", "STATUS"
+			}
+		));
+		table.getColumnModel().getColumn(1).setPreferredWidth(84);
+		table.getColumnModel().getColumn(2).setPreferredWidth(81);
+		table.getColumnModel().getColumn(3).setPreferredWidth(111);
+		table.getColumnModel().getColumn(8).setPreferredWidth(93);
+		
+		JButton btnNewButton_1 = new JButton("Show ");
+		btnNewButton_1.setForeground(new Color(192, 192, 192));
+		btnNewButton_1.setBackground(new Color(31, 53, 56));
+		btnNewButton_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					Class.forName("com.mysql.cj.jdbc.Driver");
+					Connection con = (Connection)DriverManager.getConnection("jdbc:mysql://localhost:3306/training","root","Sridevi@123");
+					String sql="select * from training";
+					
+					PreparedStatement pts=con.prepareStatement(sql);
+					//PreparedStatement pts=con.prepareStatement(login.sq1);
+					ResultSet rs= pts.executeQuery();
+					DefaultTableModel dt=(DefaultTableModel)table.getModel();
+					dt.setRowCount(0);
+					while(rs.next()) {
+					
+					Object o[]= {rs.getString("TrainerID"),rs.getString("Trainername"),rs.getString("Trainertype"),rs.getString("Trainingcategory"),rs.getString("Skilllevel"),rs.getString("Startdate"),rs.getString("Enddate"),rs.getString("Cost"),rs.getString("Traininghours"),rs.getString("Enrollment"),rs.getString("Status")};
+					dt.addRow(o);
+					}
+			}
+			catch(Exception ec) {
+					JOptionPane.showMessageDialog(null,"it has not been registered");
+					ec.printStackTrace();
+				}
+			}
+		});
+		btnNewButton_1.setFont(new Font("Times New Roman", Font.BOLD, 35));
+		btnNewButton_1.setBounds(62, 89, 139, 64);
+		contentPane.add(btnNewButton_1);
+		
+		btnNewButton_2 = new JButton("Add");
+		btnNewButton_2.setForeground(new Color(192, 192, 192));
+		btnNewButton_2.setBackground(new Color(31, 53, 56));
+		btnNewButton_2.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					new trainingdetails().setVisible(true);
+					SwingUtilities.windowForComponent(btnNewButton_2).dispose();
+				}
+				catch(Exception o) {
+					JOptionPane.showMessageDialog(btnNewButton_2,this,"Error while establishing connection failed",0);
+				}
+			}
+		});
+		btnNewButton_2.setFont(new Font("Times New Roman", Font.BOLD, 35));
+		btnNewButton_2.setBounds(62, 182, 139, 64);
+		contentPane.add(btnNewButton_2);
+		
+		btnNewButton_3 = new JButton("Update");
+		btnNewButton_3.setForeground(new Color(192, 192, 192));
+		btnNewButton_3.setBackground(new Color(31, 53, 56));
+		btnNewButton_3.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					new updatetraining().setVisible(true);
+					SwingUtilities.windowForComponent(btnNewButton_3).dispose();
+				}
+				catch(Exception o) {
+					JOptionPane.showMessageDialog(btnNewButton_3,this,"Error while establishing connection failed",0);
+				}
+			}
+				
+		});
+		btnNewButton_3.setFont(new Font("Times New Roman", Font.BOLD, 31));
+		btnNewButton_3.setBounds(62, 269, 139, 64);
+		contentPane.add(btnNewButton_3);
+		
+		btnNewButton_4 = new JButton("Delete");
+		btnNewButton_4.setForeground(new Color(192, 192, 192));
+		btnNewButton_4.setBackground(new Color(31, 53, 56));
+		btnNewButton_4.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					new deletetraining().setVisible(true);
+					SwingUtilities.windowForComponent(btnNewButton_4).dispose();
+				}
+				catch(Exception o) {
+					JOptionPane.showMessageDialog(btnNewButton_4,this,"Error while establishing connection failed",0);
+				}
+			}
+		});
+		btnNewButton_4.setFont(new Font("Times New Roman", Font.BOLD, 35));
+		btnNewButton_4.setBounds(62, 357, 139, 64);
+		contentPane.add(btnNewButton_4);
+		
+		btnNewButton = new JButton("Back");
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					new Dashboardpage().setVisible(true);
+					SwingUtilities.windowForComponent(btnNewButton).dispose();
+				}
+				catch(Exception o) {
+					JOptionPane.showMessageDialog(btnNewButton,this,"Error while establishing connection failed",0);
+				}
+			}
+		});
+		btnNewButton.setForeground(new Color(192, 192, 192));
+		btnNewButton.setBackground(new Color(31, 53, 56));
+		btnNewButton.setFont(new Font("Times New Roman", Font.BOLD, 20));
+		btnNewButton.setBounds(21, 540, 100, 30);
+		contentPane.add(btnNewButton);
+	}
+}

@@ -1,0 +1,385 @@
+import javax.swing.*;
+import javax.swing.GroupLayout.Alignment;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import javax.swing.LayoutStyle.ComponentPlacement;
+
+public class searchemployee extends JFrame {
+    private JPanel contentPane;
+    private JTextField textField_EmployeeID;
+    private JTextField textField_Name;
+    private JTextField textField_Gender;
+    private JTextField textField_Birthdate;
+    private JTextField textField_Age;
+    private JTextField textField_MaritalStatus;
+    private JTextField textField_Nationality;
+    private JTextField textField_State;
+    private JTextField textField_Address;
+    private JTextField textField_MobilePhone;
+    private JTextField textField_Email;
+    private JTextField textField_Status;
+    private JTextField textField_Supervisor;
+    private JTextField textField_HireDate;
+    private JTextField textField_Department;
+
+    public static void main(String[] args) {
+        EventQueue.invokeLater(() -> {
+            try {
+                searchemployee frame = new searchemployee();
+                frame.setVisible(true);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+    }
+
+    public searchemployee() {
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setBounds(100, 100, 950, 878);
+        contentPane = new JPanel();
+        contentPane.setBackground(new Color(31, 53, 56));
+        contentPane.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+        setContentPane(contentPane);
+
+        JLabel lblTitle = new JLabel("Employee Details");
+        lblTitle.setForeground(new Color(192, 192, 192));
+        lblTitle.setFont(new Font("Times New Roman", Font.BOLD, 27));
+
+        JLabel lblEmployeeID = new JLabel("Employee ID:");
+        lblEmployeeID.setForeground(new Color(192, 192, 192));
+        lblEmployeeID.setFont(new Font("Tahoma", Font.PLAIN, 16));
+
+        textField_EmployeeID = new JTextField();
+        textField_EmployeeID.setFont(new Font("Tahoma", Font.PLAIN, 16));
+        textField_EmployeeID.setColumns(10);
+
+        JButton btnFetch = new JButton("FETCH");
+        btnFetch.setForeground(new Color(192, 192, 192));
+        btnFetch.setBackground(new Color(31, 53, 56));
+        btnFetch.setFont(new Font("Tahoma", Font.BOLD, 20));
+        btnFetch.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                String EmployeeID = textField_EmployeeID.getText();
+                fetchEmployeeDetails(EmployeeID);
+            }
+        });
+
+        JLabel lblName = new JLabel("Name:");
+        lblName.setForeground(new Color(192, 192, 192));
+        lblName.setFont(new Font("Tahoma", Font.PLAIN, 16));
+
+        textField_Name = new JTextField();
+        textField_Name.setFont(new Font("Tahoma", Font.PLAIN, 16));
+        textField_Name.setColumns(10);
+
+        JLabel lblGender = new JLabel("Gender:");
+        lblGender.setForeground(new Color(192, 192, 192));
+        lblGender.setFont(new Font("Tahoma", Font.PLAIN, 16));
+
+        textField_Gender = new JTextField();
+        textField_Gender.setFont(new Font("Tahoma", Font.PLAIN, 16));
+        textField_Gender.setColumns(10);
+
+        JLabel lblBirthdate = new JLabel("Birthdate:");
+        lblBirthdate.setForeground(new Color(192, 192, 192));
+        lblBirthdate.setFont(new Font("Tahoma", Font.PLAIN, 16));
+
+        textField_Birthdate = new JTextField();
+        textField_Birthdate.setFont(new Font("Tahoma", Font.PLAIN, 16));
+        textField_Birthdate.setColumns(10);
+
+        JLabel lblAge = new JLabel("Age:");
+        lblAge.setForeground(new Color(192, 192, 192));
+        lblAge.setFont(new Font("Tahoma", Font.PLAIN, 16));
+
+        textField_Age = new JTextField();
+        textField_Age.setFont(new Font("Tahoma", Font.PLAIN, 16));
+        textField_Age.setColumns(10);
+
+        JLabel lblMaritalStatus = new JLabel("Marital Status:");
+        lblMaritalStatus.setForeground(new Color(192, 192, 192));
+        lblMaritalStatus.setFont(new Font("Tahoma", Font.PLAIN, 16));
+
+        textField_MaritalStatus = new JTextField();
+        textField_MaritalStatus.setFont(new Font("Tahoma", Font.PLAIN, 16));
+        textField_MaritalStatus.setColumns(10);
+
+        JLabel lblNationality = new JLabel("Nationality:");
+        lblNationality.setForeground(new Color(192, 192, 192));
+        lblNationality.setFont(new Font("Tahoma", Font.PLAIN, 16));
+
+        textField_Nationality = new JTextField();
+        textField_Nationality.setFont(new Font("Tahoma", Font.PLAIN, 16));
+        textField_Nationality.setColumns(10);
+
+        JLabel lblState = new JLabel("State:");
+        lblState.setForeground(new Color(192, 192, 192));
+        lblState.setFont(new Font("Tahoma", Font.PLAIN, 16));
+
+        textField_State = new JTextField();
+        textField_State.setFont(new Font("Tahoma", Font.PLAIN, 16));
+        textField_State.setColumns(10);
+
+        JLabel lblAddress = new JLabel("Address:");
+        lblAddress.setForeground(new Color(192, 192, 192));
+        lblAddress.setFont(new Font("Tahoma", Font.PLAIN, 16));
+
+        textField_Address = new JTextField();
+        textField_Address.setFont(new Font("Tahoma", Font.PLAIN, 16));
+        textField_Address.setColumns(10);
+
+        JLabel lblMobilePhone = new JLabel("Mobile Phone:");
+        lblMobilePhone.setForeground(new Color(192, 192, 192));
+        lblMobilePhone.setFont(new Font("Tahoma", Font.PLAIN, 16));
+
+        textField_MobilePhone = new JTextField();
+        textField_MobilePhone.setFont(new Font("Tahoma", Font.PLAIN, 16));
+        textField_MobilePhone.setColumns(10);
+
+        JLabel lblEmail = new JLabel("Email:");
+        lblEmail.setForeground(new Color(192, 192, 192));
+        lblEmail.setFont(new Font("Tahoma", Font.PLAIN, 16));
+
+        textField_Email = new JTextField();
+        textField_Email.setFont(new Font("Tahoma", Font.PLAIN, 16));
+        textField_Email.setColumns(10);
+
+        JLabel lblStatus = new JLabel("Status:");
+        lblStatus.setForeground(new Color(192, 192, 192));
+        lblStatus.setFont(new Font("Tahoma", Font.PLAIN, 16));
+
+        textField_Status = new JTextField();
+        textField_Status.setFont(new Font("Tahoma", Font.PLAIN, 16));
+        textField_Status.setColumns(10);
+
+        JLabel lblSupervisor = new JLabel("Supervisor:");
+        lblSupervisor.setForeground(new Color(192, 192, 192));
+        lblSupervisor.setFont(new Font("Tahoma", Font.PLAIN, 16));
+
+        textField_Supervisor = new JTextField();
+        textField_Supervisor.setFont(new Font("Tahoma", Font.PLAIN, 16));
+        textField_Supervisor.setColumns(10);
+
+        JLabel lblHireDate = new JLabel("Hire Date:");
+        lblHireDate.setForeground(new Color(192, 192, 192));
+        lblHireDate.setFont(new Font("Tahoma", Font.PLAIN, 16));
+
+        textField_HireDate = new JTextField();
+        textField_HireDate.setFont(new Font("Tahoma", Font.PLAIN, 16));
+        textField_HireDate.setColumns(10);
+
+        JLabel lblDepartment = new JLabel("Department:");
+        lblDepartment.setForeground(new Color(192, 192, 192));
+        lblDepartment.setFont(new Font("Tahoma", Font.PLAIN, 16));
+
+        textField_Department = new JTextField();
+        textField_Department.setFont(new Font("Tahoma", Font.PLAIN, 16));
+        textField_Department.setColumns(10);
+
+        JButton btnClear = new JButton("CLEAR");
+        btnClear.setForeground(new Color(192, 192, 192));
+        btnClear.setBackground(new Color(31, 53, 56));
+        btnClear.setFont(new Font("Tahoma", Font.BOLD, 20));
+        btnClear.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                clearFields();
+            }
+        });
+        
+        JButton btnNewButton = new JButton("BACK");
+        btnNewButton.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		try {
+					new employeelist().setVisible(true);
+					SwingUtilities.windowForComponent(btnNewButton).dispose();
+				}
+				catch(Exception o) {
+					JOptionPane.showMessageDialog(btnNewButton,this,"Error while establishing connection failed",0);
+				}
+        	}
+        });
+        btnNewButton.setBackground(new Color(27, 54, 54));
+        btnNewButton.setForeground(new Color(192, 192, 192));
+        btnNewButton.setFont(new Font("Tahoma", Font.BOLD, 20));
+
+        GroupLayout gl_contentPane = new GroupLayout(contentPane);
+        gl_contentPane.setHorizontalGroup(
+        	gl_contentPane.createParallelGroup(Alignment.TRAILING)
+        		.addGroup(gl_contentPane.createSequentialGroup()
+        			.addGap(100)
+        			.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+        				.addComponent(lblEmployeeID)
+        				.addComponent(lblName)
+        				.addComponent(lblGender)
+        				.addComponent(lblBirthdate)
+        				.addComponent(lblAge)
+        				.addComponent(lblMaritalStatus)
+        				.addComponent(lblNationality)
+        				.addComponent(lblState)
+        				.addComponent(lblAddress)
+        				.addComponent(lblEmail)
+        				.addComponent(lblStatus)
+        				.addComponent(lblSupervisor)
+        				.addComponent(lblHireDate)
+        				.addComponent(lblDepartment)
+        				.addComponent(lblMobilePhone))
+        			.addGap(30)
+        			.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+        				.addComponent(textField_EmployeeID, GroupLayout.PREFERRED_SIZE, 400, GroupLayout.PREFERRED_SIZE)
+        				.addComponent(textField_Name, GroupLayout.PREFERRED_SIZE, 400, GroupLayout.PREFERRED_SIZE)
+        				.addComponent(textField_Gender, GroupLayout.PREFERRED_SIZE, 400, GroupLayout.PREFERRED_SIZE)
+        				.addComponent(textField_Birthdate, GroupLayout.PREFERRED_SIZE, 400, GroupLayout.PREFERRED_SIZE)
+        				.addComponent(textField_Age, GroupLayout.PREFERRED_SIZE, 400, GroupLayout.PREFERRED_SIZE)
+        				.addComponent(textField_MaritalStatus, GroupLayout.PREFERRED_SIZE, 400, GroupLayout.PREFERRED_SIZE)
+        				.addComponent(textField_Nationality, GroupLayout.PREFERRED_SIZE, 400, GroupLayout.PREFERRED_SIZE)
+        				.addComponent(textField_State, GroupLayout.PREFERRED_SIZE, 400, GroupLayout.PREFERRED_SIZE)
+        				.addComponent(textField_Address, GroupLayout.PREFERRED_SIZE, 400, GroupLayout.PREFERRED_SIZE)
+        				.addComponent(textField_MobilePhone, GroupLayout.PREFERRED_SIZE, 400, GroupLayout.PREFERRED_SIZE)
+        				.addComponent(textField_Email, GroupLayout.PREFERRED_SIZE, 400, GroupLayout.PREFERRED_SIZE)
+        				.addComponent(textField_Status, GroupLayout.PREFERRED_SIZE, 400, GroupLayout.PREFERRED_SIZE)
+        				.addComponent(textField_Supervisor, GroupLayout.PREFERRED_SIZE, 400, GroupLayout.PREFERRED_SIZE)
+        				.addComponent(textField_HireDate, GroupLayout.PREFERRED_SIZE, 400, GroupLayout.PREFERRED_SIZE)
+        				.addComponent(textField_Department, GroupLayout.PREFERRED_SIZE, 400, GroupLayout.PREFERRED_SIZE))
+        			.addContainerGap(368, Short.MAX_VALUE))
+        		.addGroup(gl_contentPane.createSequentialGroup()
+        			.addContainerGap(162, Short.MAX_VALUE)
+        			.addComponent(btnNewButton, GroupLayout.PREFERRED_SIZE, 108, GroupLayout.PREFERRED_SIZE)
+        			.addGap(104)
+        			.addComponent(btnFetch, GroupLayout.PREFERRED_SIZE, 113, GroupLayout.PREFERRED_SIZE)
+        			.addGap(109)
+        			.addComponent(btnClear, GroupLayout.PREFERRED_SIZE, 106, GroupLayout.PREFERRED_SIZE)
+        			.addGap(300))
+        		.addGroup(gl_contentPane.createSequentialGroup()
+        			.addGap(303)
+        			.addComponent(lblTitle)
+        			.addContainerGap(498, Short.MAX_VALUE))
+        );
+        gl_contentPane.setVerticalGroup(
+        	gl_contentPane.createParallelGroup(Alignment.LEADING)
+        		.addGroup(gl_contentPane.createSequentialGroup()
+        			.addGap(21)
+        			.addComponent(lblTitle)
+        			.addGap(39)
+        			.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
+        				.addComponent(lblEmployeeID)
+        				.addComponent(textField_EmployeeID, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+        			.addGap(18)
+        			.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
+        				.addComponent(lblName)
+        				.addComponent(textField_Name, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+        			.addGap(18)
+        			.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
+        				.addComponent(lblGender)
+        				.addComponent(textField_Gender, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+        			.addGap(18)
+        			.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
+        				.addComponent(lblBirthdate)
+        				.addComponent(textField_Birthdate, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+        			.addGap(18)
+        			.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
+        				.addComponent(lblAge)
+        				.addComponent(textField_Age, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+        			.addGap(18)
+        			.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
+        				.addComponent(lblMaritalStatus)
+        				.addComponent(textField_MaritalStatus, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+        			.addGap(18)
+        			.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
+        				.addComponent(lblNationality)
+        				.addComponent(textField_Nationality, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+        			.addGap(18)
+        			.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
+        				.addComponent(lblState)
+        				.addComponent(textField_State, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+        			.addGap(18)
+        			.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
+        				.addComponent(lblAddress)
+        				.addComponent(textField_Address, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+        			.addGap(18)
+        			.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
+        				.addComponent(lblMobilePhone)
+        				.addComponent(textField_MobilePhone, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+        			.addGap(18)
+        			.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
+        				.addComponent(lblEmail)
+        				.addComponent(textField_Email, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+        			.addGap(18)
+        			.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
+        				.addComponent(lblStatus)
+        				.addComponent(textField_Status, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+        			.addGap(18)
+        			.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
+        				.addComponent(lblSupervisor)
+        				.addComponent(textField_Supervisor, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+        			.addGap(18)
+        			.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
+        				.addComponent(lblHireDate)
+        				.addComponent(textField_HireDate, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+        			.addGap(18)
+        			.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
+        				.addComponent(lblDepartment)
+        				.addComponent(textField_Department, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+        			.addGap(30)
+        			.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
+        				.addComponent(btnClear)
+        				.addComponent(btnFetch, GroupLayout.PREFERRED_SIZE, 37, GroupLayout.PREFERRED_SIZE)
+        				.addComponent(btnNewButton, GroupLayout.PREFERRED_SIZE, 35, GroupLayout.PREFERRED_SIZE))
+        			.addGap(30))
+        );
+        contentPane.setLayout(gl_contentPane);
+    }
+
+    private void fetchEmployeeDetails(String EmployeeID) {
+        try {
+            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/employee", "root", "Sridevi@123");
+            PreparedStatement Pstatement = connection.prepareStatement("SELECT * FROM employee WHERE EmployeeID = ?");
+            Pstatement.setString(1, EmployeeID);
+            ResultSet rs = Pstatement.executeQuery();
+
+            if (rs.next()) {
+                textField_Name.setText(rs.getString("Name"));
+                textField_Gender.setText(rs.getString("Gender"));
+                textField_Birthdate.setText(rs.getString("Birthdate"));
+                textField_Age.setText(rs.getString("Age"));
+                textField_MaritalStatus.setText(rs.getString("MaritalStatus"));
+                textField_Nationality.setText(rs.getString("Nationality"));
+                textField_State.setText(rs.getString("State"));
+                textField_Address.setText(rs.getString("Address"));
+                textField_MobilePhone.setText(rs.getString("MobilePhone"));
+                textField_Email.setText(rs.getString("Email"));
+                textField_Status.setText(rs.getString("Status"));
+                textField_Supervisor.setText(rs.getString("Supervisor"));
+                textField_HireDate.setText(rs.getString("Hireddate"));
+                textField_Department.setText(rs.getString("Department"));
+            } else {
+                JOptionPane.showMessageDialog(null, "No employee found with the provided Employee ID.");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void clearFields() {
+        textField_EmployeeID.setText("");
+        textField_Name.setText("");
+        textField_Gender.setText("");
+        textField_Birthdate.setText("");
+        textField_Age.setText("");
+        textField_MaritalStatus.setText("");
+        textField_Nationality.setText("");
+        textField_State.setText("");
+        textField_Address.setText("");
+        textField_MobilePhone.setText("");
+        textField_Email.setText("");
+        textField_Status.setText("");
+        textField_Supervisor.setText("");
+        textField_HireDate.setText("");
+        textField_Department.setText("");
+    }
+}

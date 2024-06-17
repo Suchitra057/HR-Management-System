@@ -1,0 +1,274 @@
+import java.awt.*;
+import java.awt.EventQueue;
+import java.awt.event.*;
+import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableModel;
+import com.toedter.calendar.JDateChooser;
+import java.sql.*;
+import java.util.Date;
+import java.text.SimpleDateFormat;
+
+public class timemanagement extends JFrame {
+
+    private JPanel contentPane;
+    private JTextField empIdField, empNameField, empDeptField;
+    private JTable attendanceTable;
+    private JDateChooser dateChooser;
+
+    public static void main(String[] args) {
+        EventQueue.invokeLater(() -> {
+            try {
+                timemanagement frame = new timemanagement();
+                frame.setVisible(true);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+    }
+
+    public timemanagement() {
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setBounds(100, 100, 920, 765);
+        contentPane = new JPanel();
+        contentPane.setBackground(new Color(29, 58, 58));
+        contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+        setContentPane(contentPane);
+        contentPane.setLayout(null);
+
+        JLabel lblEmployeeId = new JLabel("Employee ID");
+        lblEmployeeId.setForeground(new Color(192, 192, 192));
+        lblEmployeeId.setBackground(new Color(29, 58, 58));
+        lblEmployeeId.setFont(new Font("Tahoma", Font.BOLD, 14));
+        lblEmployeeId.setBounds(10, 26, 100, 20);
+        contentPane.add(lblEmployeeId);
+
+        empIdField = new JTextField();
+        empIdField.setBounds(120, 21, 150, 25);
+        contentPane.add(empIdField);
+        empIdField.setColumns(10);
+
+        JLabel lblName = new JLabel("Name");
+        lblName.setForeground(new Color(192, 192, 192));
+        lblName.setFont(new Font("Tahoma", Font.BOLD, 14));
+        lblName.setBounds(10, 61, 100, 20);
+        contentPane.add(lblName);
+
+        empNameField = new JTextField();
+        empNameField.setBounds(120, 56, 150, 25);
+        contentPane.add(empNameField);
+        empNameField.setColumns(10);
+
+        JLabel lblDepartment = new JLabel("Department");
+        lblDepartment.setForeground(new Color(192, 192, 192));
+        lblDepartment.setFont(new Font("Tahoma", Font.BOLD, 14));
+        lblDepartment.setBounds(10, 93, 100, 19);
+        contentPane.add(lblDepartment);
+
+        empDeptField = new JTextField();
+        empDeptField.setBounds(120, 89, 150, 23);
+        contentPane.add(empDeptField);
+        empDeptField.setColumns(10);
+
+        JLabel lblDate = new JLabel("Date");
+        lblDate.setForeground(new Color(192, 192, 192));
+        lblDate.setFont(new Font("Tahoma", Font.BOLD, 14));
+        lblDate.setBounds(10, 122, 100, 25);
+        contentPane.add(lblDate);
+
+        dateChooser = new JDateChooser();
+        dateChooser.setBounds(120, 122, 150, 25);
+        contentPane.add(dateChooser);
+
+        JButton btnMarkAttendance = new JButton("Mark Attendance");
+        btnMarkAttendance.setForeground(new Color(192, 192, 192));
+        btnMarkAttendance.setBackground(new Color(26, 51, 51));
+        btnMarkAttendance.setFont(new Font("Tahoma", Font.BOLD, 14));
+        btnMarkAttendance.addActionListener(e -> markAttendance());
+        btnMarkAttendance.setBounds(333, 113, 170, 34);
+        contentPane.add(btnMarkAttendance);
+
+        JScrollPane scrollPane = new JScrollPane();
+        scrollPane.setBounds(10, 185, 886, 533);
+        contentPane.add(scrollPane);
+
+        attendanceTable = new JTable();
+        attendanceTable.setModel(new DefaultTableModel(
+                new Object[][]{},
+                new String[]{
+                    "Employee ID", "Name", "Department", "Date", "Status"
+                }
+        ));
+        scrollPane.setViewportView(attendanceTable);
+
+        JButton btnViewAttendance = new JButton("View Attendance History");
+        btnViewAttendance.setForeground(new Color(192, 192, 192));
+        btnViewAttendance.setBackground(new Color(26, 51, 51));
+        btnViewAttendance.setFont(new Font("Tahoma", Font.BOLD, 14));
+        btnViewAttendance.addActionListener(e -> loadAttendanceHistory());
+        btnViewAttendance.setBounds(333, 61, 221, 34);
+        contentPane.add(btnViewAttendance);
+        
+        JButton btnFetch = new JButton("Fetch");
+        btnFetch.setForeground(new Color(192, 192, 192));
+        btnFetch.setBackground(new Color(26, 51, 51));
+        btnFetch.setFont(new Font("Tahoma", Font.BOLD, 17));
+        btnFetch.setBounds(282, 21, 85, 28);
+        btnFetch.addActionListener(e -> fetchEmployeeDetails());
+        contentPane.add(btnFetch);
+        
+        JLabel lblNewLabel = new JLabel("Attendance Of An Employee");
+        lblNewLabel.setForeground(new Color(255, 255, 255));
+        lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 19));
+        lblNewLabel.setBounds(377, 10, 263, 25);
+        contentPane.add(lblNewLabel);
+        
+        JButton btnNewButton = new JButton("Search");
+        btnNewButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    searchattendance searchFrame = new searchattendance();
+                    searchFrame.initializeUI(); // Initialize searchattendance frame
+                    dispose(); // Dispose of current timemanagement frame
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                    JOptionPane.showMessageDialog(btnNewButton, "Error while establishing connection: " + ex.getMessage(), "Connection Error", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        });
+
+
+        btnNewButton.setForeground(new Color(192, 192, 192));
+        btnNewButton.setBackground(new Color(26, 51, 51));
+        btnNewButton.setFont(new Font("Tahoma", Font.BOLD, 14));
+        btnNewButton.setBounds(568, 62, 85, 32);
+        contentPane.add(btnNewButton);
+        
+        JButton btnBack = new JButton("Back");
+        btnBack.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		try {
+					new Dashboardpage().setVisible(true);
+					SwingUtilities.windowForComponent(btnBack).dispose();
+				}
+				catch(Exception o) {
+					JOptionPane.showMessageDialog(btnBack,this,"Error while establishing connection failed",0);
+				}
+        		
+        	}
+        });
+        btnBack.setForeground(Color.LIGHT_GRAY);
+        btnBack.setFont(new Font("Tahoma", Font.BOLD, 14));
+        btnBack.setBackground(new Color(26, 51, 51));
+        btnBack.setBounds(568, 113, 85, 32);
+        contentPane.add(btnBack);
+    }
+
+    private void fetchEmployeeDetails() {
+        String empId = empIdField.getText().trim();
+
+        if (empId.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Please enter Employee ID");
+            return;
+        }
+
+        try (Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/employee", "root", "Sridevi@123");
+             PreparedStatement ps = con.prepareStatement("SELECT Name, Department FROM employee WHERE EmployeeID = ?")) {
+
+            ps.setString(1, empId);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                String name = rs.getString("Name");
+                String department = rs.getString("Department");
+
+                empNameField.setText(name);
+                empDeptField.setText(department);
+            } else {
+                JOptionPane.showMessageDialog(null, "Employee not found");
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Error fetching employee details: " + e.getMessage());
+        }
+    }
+
+    private void markAttendance() {
+        String empId = empIdField.getText().trim();
+        String name = empNameField.getText().trim();
+        String department = empDeptField.getText().trim();
+
+        if (empId.isEmpty() || name.isEmpty() || department.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Please fetch and fill in all employee details before marking attendance");
+            return;
+        }
+
+        // Get the selected date or current date
+        Date selectedDate = dateChooser.getDate();
+        if (selectedDate == null) {
+            JOptionPane.showMessageDialog(null, "Please select a date");
+            return;
+        }
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        String date = sdf.format(selectedDate);
+
+        try (Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/employee", "root", "Sridevi@123");
+             PreparedStatement psCheck = con.prepareStatement("SELECT Status FROM eattendance WHERE EmployeeID = ? AND Date = ?");
+             PreparedStatement psUpdate = con.prepareStatement("UPDATE eattendance SET Status = ? WHERE EmployeeID = ? AND Date = ?");
+             PreparedStatement psInsert = con.prepareStatement("INSERT INTO eattendance (EmployeeID, Name, Department, Date, Status) VALUES (?, ?, ?, ?, ?)")) {
+
+            psCheck.setString(1, empId);
+            psCheck.setString(2, date);
+            ResultSet rs = psCheck.executeQuery();
+
+            if (rs.next()) {
+                String status = rs.getString("Status");
+                // Toggle status between Present and Absent
+                String newStatus = status.equals("Present") ? "Absent" : "Present";
+                psUpdate.setString(1, newStatus);
+                psUpdate.setString(2, empId);
+                psUpdate.setString(3, date);
+                psUpdate.executeUpdate();
+
+                JOptionPane.showMessageDialog(null, "Attendance marked as " + newStatus);
+            } else {
+                // Attendance not marked for the selected date, mark as Present
+                psInsert.setString(1, empId);
+                psInsert.setString(2, name);
+                psInsert.setString(3, department);
+                psInsert.setString(4, date);
+                psInsert.setString(5, "Present");
+                psInsert.executeUpdate();
+
+                JOptionPane.showMessageDialog(null, "Attendance marked as Present");
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Error marking attendance: " + e.getMessage());
+        }
+    }
+
+    private void loadAttendanceHistory() {
+        try (Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/employee", "root", "Sridevi@123");
+             Statement stmt = con.createStatement()) {
+            ResultSet rs = stmt.executeQuery("SELECT EmployeeID, Name, Department, Date, Status FROM eattendance");
+
+            DefaultTableModel model = (DefaultTableModel) attendanceTable.getModel();
+            model.setRowCount(0);
+
+            while (rs.next()) {
+                String empID = rs.getString("EmployeeID");
+                String name = rs.getString("Name");
+                String department = rs.getString("Department");
+                String attDate = rs.getString("Date");
+                String status = rs.getString("Status");
+                model.addRow(new Object[]{empID, name, department, attDate, status});
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Error fetching attendance history: " + e.getMessage());
+        }
+    }
+}

@@ -1,0 +1,268 @@
+import com.toedter.calendar.JDateChooser;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
+import javax.swing.table.DefaultTableModel;
+
+public class searchattendance {
+    Connection con;
+    DefaultTableModel model = new DefaultTableModel();
+    JTextField absenceTextField;
+    JTextField presenceTextField;
+    JDateChooser dateChooser;
+
+    public void initializeUI() throws SQLException {
+        connect();
+        JFrame frame = new JFrame("Employee Attendance Management System");
+        Font text = new Font("Times New Roman", Font.PLAIN, 18);
+        Font btn = new Font("Times New Roman", Font.BOLD, 20);
+
+        //----------------TABLE---------------------------------
+        @SuppressWarnings("serial")
+        JTable table = new JTable() {
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
+        model = (DefaultTableModel) table.getModel();
+        model.addColumn("Employee ID");
+        model.addColumn("Name");
+        model.addColumn("Status");
+        model.addColumn("Date");
+        table.getColumnModel().getColumn(0).setPreferredWidth(100);
+        table.getColumnModel().getColumn(1).setPreferredWidth(200);
+        table.getColumnModel().getColumn(2).setPreferredWidth(100);
+        table.getColumnModel().getColumn(3).setPreferredWidth(150);
+        JScrollPane scPane = new JScrollPane(table);
+        scPane.setBounds(308, 50, 672, 525);
+        frame.getContentPane().add(scPane);
+
+        //-------------------------DATE-------------------------
+        JLabel dt = new JLabel("DATE : ");
+        dt.setFont(text);
+        dt.setBounds(25, 60, 75, 20);
+        dt.setForeground(Color.decode("#DEE4E7"));
+        frame.getContentPane().add(dt);
+        dateChooser = new JDateChooser();
+        dateChooser.setBounds(100, 60, 150, 25);
+        dateChooser.setDateFormatString("yyyy-MM-dd");
+        dateChooser.setFont(text);
+        dateChooser.setForeground(Color.decode("#37474F"));
+        frame.getContentPane().add(dateChooser);
+
+        //---------------------DEPARTMENT-----------------------
+        JLabel deptLabel = new JLabel("DEPARTMENT : ");
+        deptLabel.setFont(text);
+        deptLabel.setBounds(25, 100, 150, 20);
+        deptLabel.setForeground(Color.decode("#DEE4E7"));
+        frame.getContentPane().add(deptLabel);
+        JComboBox<String> departmentComboBox = new JComboBox<>(getDepartments());
+        departmentComboBox.setBounds(180, 100, 118, 25);
+        frame.getContentPane().add(departmentComboBox);
+
+        //---------------------VIEWBUTTON-----------------------
+        JButton view = new JButton("VIEW");
+        view.setBounds(175, 150, 123, 50);
+        view.setFont(btn);
+        view.setBackground(new Color(29, 58, 58));
+        view.setForeground(new Color(192, 192, 192));
+        frame.getContentPane().add(view);
+        view.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    String selectedDate = new SimpleDateFormat("yyyy-MM-dd").format(dateChooser.getDate());
+                    String selectedDepartment = String.valueOf(departmentComboBox.getSelectedItem());
+                    tblupdt(selectedDate, selectedDepartment);
+                } catch (SQLException e1) {
+                    e1.printStackTrace();
+                }
+            }
+        });
+
+        //--------------------ABSENCE CALCULATION------------------------
+        JLabel absenceLabel = new JLabel("ABSENCE: ");
+        absenceLabel.setFont(text);
+        absenceLabel.setBounds(25, 210, 150, 20);
+        absenceLabel.setForeground(Color.decode("#DEE4E7"));
+        frame.getContentPane().add(absenceLabel);
+
+        absenceTextField = new JTextField();
+        absenceTextField.setBounds(180, 210, 100, 25);
+        frame.getContentPane().add(absenceTextField);
+        absenceTextField.setEditable(false);
+
+        //--------------------PRESENCE CALCULATION------------------------
+        JLabel presenceLabel = new JLabel("PRESENCE: ");
+        presenceLabel.setFont(text);
+        presenceLabel.setBounds(25, 250, 150, 20);
+        presenceLabel.setForeground(Color.decode("#DEE4E7"));
+        frame.getContentPane().add(presenceLabel);
+
+        presenceTextField = new JTextField();
+        presenceTextField.setBounds(180, 250, 100, 25);
+        frame.getContentPane().add(presenceTextField);
+        presenceTextField.setEditable(false);
+
+        //---------------------EMPLOYEE ID FIELD--------------------------
+        JLabel employeeIdLabel = new JLabel("EMPLOYEE ID: ");
+        employeeIdLabel.setFont(text);
+        employeeIdLabel.setBounds(25, 290, 150, 20);
+        employeeIdLabel.setForeground(Color.decode("#DEE4E7"));
+        frame.getContentPane().add(employeeIdLabel);
+
+        JTextField employeeIdTextField = new JTextField();
+        employeeIdTextField.setBounds(180, 290, 100, 25);
+        frame.getContentPane().add(employeeIdTextField);
+
+        //---------------------VIEW EMPLOYEE BUTTON-----------------------
+        JButton viewEmployeeButton = new JButton("VIEW EMPLOYEE");
+        viewEmployeeButton.setBounds(25, 330, 255, 40);
+        viewEmployeeButton.setFont(btn);
+        viewEmployeeButton.setBackground(new Color(29, 58, 58));
+        viewEmployeeButton.setForeground(new Color(192, 192, 192));
+        frame.getContentPane().add(viewEmployeeButton);
+        viewEmployeeButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String selectedEmployeeId = employeeIdTextField.getText().trim();
+                if (!selectedEmployeeId.isEmpty()) {
+                    try {
+                        calculateEmployeeAttendance(selectedEmployeeId);
+                    } catch (SQLException throwables) {
+                        throwables.printStackTrace();
+                    }
+                }
+            }
+        });
+
+        //---------------------BACK BUTTON------------------------------
+        JButton backButton = new JButton("BACK");
+        backButton.setBounds(25, 380, 255, 40);
+        backButton.setFont(btn);
+        backButton.setBackground(new Color(29, 58, 58));
+        backButton.setForeground(new Color(192, 192, 192));
+        frame.getContentPane().add(backButton);
+        backButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    new timemanagement().setVisible(true);
+                    SwingUtilities.windowForComponent(backButton).dispose();
+                } catch (Exception o) {
+                    JOptionPane.showMessageDialog(backButton, this, "Error while establishing connection failed", 0);
+                }
+            }
+        });
+
+        frame.setSize(1000, 600);
+        frame.setResizable(false);
+        frame.getContentPane().setLayout(null);
+        frame.setUndecorated(true);
+        frame.setLocationRelativeTo(null);
+        frame.setVisible(true);
+        frame.setFocusable(true);
+        frame.getContentPane().setBackground(new Color(29, 58, 58));
+        
+        JLabel lblNewLabel = new JLabel("ATTENDANCE");
+        lblNewLabel.setFont(new Font("Times New Roman", Font.BOLD, 24));
+        lblNewLabel.setForeground(new Color(192, 192, 192));
+        lblNewLabel.setBounds(424, 10, 304, 30);
+        frame.getContentPane().add(lblNewLabel);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    }
+
+    public void connect() throws SQLException {
+        String url = "jdbc:mysql://localhost:3306/employee";
+        String user = "root";
+        String pass = "Sridevi@123";
+        con = DriverManager.getConnection(url, user, pass);
+    }
+
+    public void tblupdt(String selectedDate, String selectedDepartment) throws SQLException {
+        for (int i = 0; i < model.getRowCount(); i++) {
+            model.removeRow(i);
+            model.setRowCount(0);
+        }
+        try {
+            ResultSet res = dbSearch(selectedDate, selectedDepartment);
+            int absenceCount = 0;
+            int presenceCount = 0;
+            while (res.next()) {
+                model.addRow(new Object[]{res.getString("EmployeeID"), res.getString("Name"), res.getString("Status"), res.getString("Date")});
+                if (res.getString("Status").equals("Absent")) {
+                    absenceCount++;
+                } else if (res.getString("Status").equals("Present")) {
+                    presenceCount++;
+                }
+            }
+            absenceTextField.setText(String.valueOf(absenceCount));
+            presenceTextField.setText(String.valueOf(presenceCount));
+        } catch (SQLException e1) {
+            e1.printStackTrace();
+        }
+    }
+
+    public void calculateEmployeeAttendance(String employeeId) throws SQLException {
+        String query = "SELECT Status, COUNT(*) as count FROM eattendance WHERE EmployeeID = '" + employeeId + "' GROUP BY Status";
+        Statement stm = con.createStatement();
+        ResultSet rst = stm.executeQuery(query);
+        int absenceCount = 0;
+        int presenceCount = 0;
+        while (rst.next()) {
+            if (rst.getString("Status").equals("Absent")) {
+                absenceCount = rst.getInt("count");
+            } else if (rst.getString("Status").equals("Present")) {
+                presenceCount = rst.getInt("count");
+            }
+        }
+        absenceTextField.setText(String.valueOf(absenceCount));
+        presenceTextField.setText(String.valueOf(presenceCount));
+    }
+
+    public ResultSet dbSearch(String selectedDate, String selectedDepartment) throws SQLException {
+        String query = "SELECT * FROM eattendance INNER JOIN employee ON eattendance.EmployeeID = employee.EmployeeID WHERE eattendance.Date = '" + selectedDate + "' AND employee.Department = '" + selectedDepartment + "'";
+        Statement stm = con.createStatement();
+        return stm.executeQuery(query);
+    }
+
+    public String[] getDepartments() throws SQLException {
+        String query = "SELECT DISTINCT Department FROM employee";
+        Statement stm = con.createStatement();
+        ResultSet rst = stm.executeQuery(query);
+        ArrayList<String> departments = new ArrayList<>();
+        while (rst.next()) {
+            departments.add(rst.getString("Department"));
+        }
+        return departments.toArray(new String[0]);
+    }
+
+    public static void main(String[] args) throws SQLException {
+        searchattendance app = new searchattendance();
+        app.initializeUI();
+    }
+
+	public void setVisible(boolean b) {
+		// TODO Auto-generated method stub
+		
+	}
+}

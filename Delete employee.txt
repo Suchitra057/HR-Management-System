@@ -1,0 +1,145 @@
+import java.awt.EventQueue;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
+import java.awt.Font;
+import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
+import javax.swing.JButton;
+import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.awt.event.ActionEvent;
+import java.sql.Connection;
+import javax.swing.ImageIcon;
+import java.awt.Color;
+
+public class deleteemployee extends JFrame {
+
+	private static final long serialVersionUID = 1L;
+	private JPanel contentPane;
+	private JTextField textField;
+	
+
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					deleteemployee frame = new deleteemployee();
+					frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
+	/**
+	 * Create the frame.
+	 */
+	public deleteemployee() {
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setBounds(100, 100, 619, 384);
+		contentPane = new JPanel();
+		contentPane.setBackground(new Color(31, 53, 56));
+		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+
+		setContentPane(contentPane);
+		contentPane.setLayout(null);
+		
+		JLabel lblNewLabel = new JLabel("Employee ID");
+		lblNewLabel.setForeground(new Color(217, 217, 217));
+		lblNewLabel.setFont(new Font("Times New Roman", Font.BOLD, 27));
+		lblNewLabel.setBounds(81, 100, 191, 27);
+		contentPane.add(lblNewLabel);
+		
+		
+		textField = new JTextField();
+		textField.setBounds(296, 100, 264, 30);
+		contentPane.add(textField);
+		textField.setColumns(10);
+		
+		
+		
+		JButton btnNewButton = new JButton("Submit");
+		btnNewButton.setBackground(new Color(31, 53, 56));
+		btnNewButton.setForeground(new Color(228, 228, 228));
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+                 String EmployeeID=textField.getText();
+                
+				
+				try {
+					try {
+						Class.forName("com.mysql.cj.jdbc.Driver");
+					} catch (ClassNotFoundException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+					Connection con = (Connection)DriverManager.getConnection("jdbc:mysql://localhost:3306/employee","root","Sridevi@123");
+				    PreparedStatement pst = con.prepareStatement("delete from employee where EmployeeID=?");
+				    pst.setString(1, EmployeeID);
+				   
+				    
+				    int rowsAffected = pst.executeUpdate();
+				    if (rowsAffected > 0) {
+				        JOptionPane.showMessageDialog(null, "Successfully Deleted");
+				        setVisible(false);
+				        new employee().setVisible(true);
+				        employeelist frame = new employeelist();
+						frame.setVisible(true);
+
+				    } else {
+				        JOptionPane.showMessageDialog(null, "Failed to Delete");
+				    }
+				    
+				    pst.close();
+				    con.close();
+				} catch (SQLException e1) {
+				    e1.printStackTrace();
+				    // Handle any SQL errors
+				}
+
+				
+			}
+				
+				
+				
+		});
+		btnNewButton.setFont(new Font("Times New Roman", Font.BOLD, 29));
+		btnNewButton.setBounds(308, 200, 191, 43);
+		contentPane.add(btnNewButton);
+		
+		JLabel lblNewLabel_3 = new JLabel("Enter Employee To Remove");
+		lblNewLabel_3.setForeground(new Color(217, 217, 217));
+		lblNewLabel_3.setFont(new Font("Times New Roman", Font.BOLD, 30));
+		lblNewLabel_3.setBounds(134, 10, 426, 37);
+		contentPane.add(lblNewLabel_3);
+		
+		JButton btnBack = new JButton("Back");
+		btnBack.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					new employeelist().setVisible(true);
+					SwingUtilities.windowForComponent(btnBack).dispose();
+				}
+				catch(Exception o) {
+					JOptionPane.showMessageDialog(btnBack,this,"Error while establishing connection failed",0);
+				}
+			}
+		});
+		btnBack.setForeground(new Color(228, 228, 228));
+		btnBack.setFont(new Font("Times New Roman", Font.BOLD, 29));
+		btnBack.setBackground(new Color(31, 53, 56));
+		btnBack.setBounds(81, 200, 162, 43);
+		contentPane.add(btnBack);
+	}
+}

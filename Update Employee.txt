@@ -1,0 +1,198 @@
+import java.awt.EventQueue;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import java.awt.Font;
+import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
+import javax.swing.JButton;
+import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.awt.event.ActionEvent;
+import javax.swing.ImageIcon;
+import java.awt.Color;
+
+public class updateemployee extends JFrame {
+
+	private static final long serialVersionUID = 1L;
+	private JPanel contentPane;
+	private JTextField textField_5;
+	private JTextField textField_1;
+	private JTextField textField_2;
+	private JTextField textField_3;
+	private JTextField textField_4;
+
+
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					updateemployee frame = new updateemployee();
+					frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
+	/**
+	 * Create the frame.
+	 */
+	public updateemployee() {
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setBounds(100, 100, 698, 489);
+		contentPane = new JPanel();
+		contentPane.setBackground(new Color(31, 53, 56));
+		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+
+		setContentPane(contentPane);
+		contentPane.setLayout(null);
+		
+		JLabel lblNewLabel = new JLabel("Update Employee");
+		lblNewLabel.setForeground(new Color(192, 192, 192));
+		lblNewLabel.setFont(new Font("Times New Roman", Font.BOLD, 29));
+		lblNewLabel.setBounds(238, 10, 265, 52);
+		contentPane.add(lblNewLabel);
+		
+		JLabel lblNewLabel_1 = new JLabel("Name");
+		lblNewLabel_1.setForeground(new Color(192, 192, 192));
+		lblNewLabel_1.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		lblNewLabel_1.setBounds(137, 114, 135, 25);
+		contentPane.add(lblNewLabel_1);
+		
+		JLabel lblNewLabel_13_1 = new JLabel("Mobile Phone");
+		lblNewLabel_13_1.setForeground(new Color(192, 192, 192));
+		lblNewLabel_13_1.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		lblNewLabel_13_1.setBounds(137, 153, 142, 25);
+		contentPane.add(lblNewLabel_13_1);
+		
+		JLabel lblNewLabel_11_1 = new JLabel("Address");
+		lblNewLabel_11_1.setForeground(new Color(192, 192, 192));
+		lblNewLabel_11_1.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		lblNewLabel_11_1.setBounds(137, 192, 142, 25);
+		contentPane.add(lblNewLabel_11_1);
+		
+		JLabel lblNewLabel_14_1_1 = new JLabel("E-mail");
+		lblNewLabel_14_1_1.setForeground(new Color(192, 192, 192));
+		lblNewLabel_14_1_1.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		lblNewLabel_14_1_1.setBounds(137, 233, 142, 25);
+		contentPane.add(lblNewLabel_14_1_1);
+		
+		textField_2 = new JTextField();
+		textField_2.setColumns(10);
+		textField_2.setBounds(313, 155, 272, 29);
+		contentPane.add(textField_2);
+		
+		textField_1 = new JTextField();
+		textField_1.setColumns(10);
+		textField_1.setBounds(313, 116, 272, 29);
+		contentPane.add(textField_1);
+		
+		textField_3 = new JTextField();
+		textField_3.setColumns(10);
+		textField_3.setBounds(313, 194, 272, 29);
+		contentPane.add(textField_3);
+		
+		textField_4 = new JTextField();
+		textField_4.setColumns(10);
+		textField_4.setBounds(313, 233, 272, 29);
+		contentPane.add(textField_4);
+		
+		textField_5 = new JTextField();
+		textField_5.setColumns(10);
+		textField_5.setBounds(313, 272, 272, 29);
+		contentPane.add(textField_5);
+		
+		JButton btnNewButton = new JButton("Submit");
+		btnNewButton.setBackground(new Color(31, 53, 56));
+		btnNewButton.setForeground(new Color(192, 192, 192));
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String EmployeeID=textField_5.getText();
+				String Name=textField_1.getText();
+			    String Mobilephone=textField_2.getText();
+			    String Address=textField_3.getText();
+			    String Email=textField_4.getText();
+			    
+			   
+				
+				try {
+					
+					try {
+						Class.forName("com.mysql.cj.jdbc.Driver");
+					} catch (ClassNotFoundException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+					Connection con = (Connection)DriverManager.getConnection("jdbc:mysql://localhost:3306/employee","root","Sridevi@123");
+				    
+				   
+				    PreparedStatement pst = con.prepareStatement("update employee set Name=?,Mobilephone=?,Address=?,Email=? where EmployeeID=?");
+				
+				    pst.setString(1, Name);
+				    pst.setString(2, Mobilephone);
+				    pst.setString(3, Address);
+				    pst.setString(4, Email);
+				    pst.setString(5, EmployeeID);
+				    
+				    
+				   
+				    
+				    int rowsAffected = pst.executeUpdate();
+				    if (rowsAffected > 0) {
+				        JOptionPane.showMessageDialog(null, "Successfully updated");
+				        setVisible(false);
+				        new employeelist().setVisible(true);
+				    } else {
+				        JOptionPane.showMessageDialog(null, "Failed to update");
+				    }
+				    
+				    pst.close();
+				    con.close();
+				} catch (SQLException e1) {
+				    e1.printStackTrace();
+				    // Handle any SQL errors
+				}
+				
+			}
+		});
+		btnNewButton.setFont(new Font("Tahoma", Font.BOLD, 25));
+		btnNewButton.setBounds(327, 345, 164, 39);
+		contentPane.add(btnNewButton);
+		
+		JLabel lblNewLabel_3_1 = new JLabel("Employee ID");
+		lblNewLabel_3_1.setForeground(new Color(192, 192, 192));
+		lblNewLabel_3_1.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		lblNewLabel_3_1.setBounds(137, 270, 142, 25);
+		contentPane.add(lblNewLabel_3_1);
+		
+		JButton btnBack = new JButton("Back");
+		btnBack.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					new employeelist().setVisible(true);
+					SwingUtilities.windowForComponent(btnBack).dispose();
+				}
+				catch(Exception o) {
+					JOptionPane.showMessageDialog(btnBack,this,"Error while establishing connection failed",0);
+				}
+				
+			}
+		});
+		btnBack.setForeground(Color.LIGHT_GRAY);
+		btnBack.setFont(new Font("Tahoma", Font.BOLD, 25));
+		btnBack.setBackground(new Color(31, 53, 56));
+		btnBack.setBounds(73, 345, 164, 39);
+		contentPane.add(btnBack);
+	}
+
+}

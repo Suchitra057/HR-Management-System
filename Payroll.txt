@@ -1,0 +1,469 @@
+import java.awt.EventQueue;
+import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.print.PrinterException;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
+import javax.swing.border.EmptyBorder;
+import java.awt.Color;
+import com.toedter.calendar.JDateChooser;
+
+public class payrolls extends JFrame {
+
+    private JPanel contentPane;
+    private JTextField txtEmployeeID;
+    private JTextField txtName;
+    private JTextField txtDepartment;
+    private JTextField txtHireDate;
+    private JTextField txtSalaryCreditedTo;
+    private JTextField txtBankName;
+    private JTextField txtAccountNo;
+    private JTextField txtAllowance;
+    private JTextField txtBonus;
+    private JTextField txtPt;
+    private JTextField txtEmployeeEPF;
+    private JTextField txtGrossWages;
+    private JTextField txtGrossDeduction;
+    private JTextField txtNetWages;
+    private JTextField txtTotalNetPayable;
+    private JTextField txtBasic;
+
+    public static void main(String[] args) {
+        EventQueue.invokeLater(() -> {
+            try {
+                payrolls frame = new payrolls();
+                frame.setVisible(true);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+    }
+
+    public payrolls() {
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setBounds(100, 100, 1115, 878);
+        contentPane = new JPanel();
+        contentPane.setBackground(new Color(34, 68, 68));
+        contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+        setContentPane(contentPane);
+        contentPane.setLayout(null);
+
+        JLabel lblEmployeeID = new JLabel("Employee ID:");
+        lblEmployeeID.setForeground(new Color(192, 192, 192));
+        lblEmployeeID.setFont(new Font("Tahoma", Font.PLAIN, 16));
+        lblEmployeeID.setBounds(70, 135, 140, 30);
+        contentPane.add(lblEmployeeID);
+
+        txtEmployeeID = new JTextField();
+        txtEmployeeID.setFont(new Font("Tahoma", Font.PLAIN, 16));
+        txtEmployeeID.setBounds(220, 135, 200, 30);
+        contentPane.add(txtEmployeeID);
+        txtEmployeeID.setColumns(10);
+
+        JButton btnFetchDetails = new JButton("");
+        btnFetchDetails.setBackground(new Color(128, 128, 128));
+        btnFetchDetails.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                fetchEmployeeDetails();
+            }
+        });
+        btnFetchDetails.setFont(new Font("Tahoma", Font.PLAIN, 16));
+        btnFetchDetails.setBounds(430, 135, 42, 30);
+        contentPane.add(btnFetchDetails);
+
+        JLabel lblName = new JLabel("Name:");
+        lblName.setForeground(new Color(192, 192, 192));
+        lblName.setFont(new Font("Tahoma", Font.PLAIN, 16));
+        lblName.setBounds(70, 175, 140, 30);
+        contentPane.add(lblName);
+
+        txtName = new JTextField();
+        txtName.setFont(new Font("Tahoma", Font.PLAIN, 16));
+        txtName.setBounds(220, 175, 200, 30);
+        contentPane.add(txtName);
+        txtName.setColumns(10);
+
+        JLabel lblDesignation = new JLabel("Department:");
+        lblDesignation.setForeground(new Color(192, 192, 192));
+        lblDesignation.setFont(new Font("Tahoma", Font.PLAIN, 16));
+        lblDesignation.setBounds(70, 215, 140, 30);
+        contentPane.add(lblDesignation);
+
+        txtDepartment = new JTextField();
+        txtDepartment.setFont(new Font("Tahoma", Font.PLAIN, 16));
+        txtDepartment.setBounds(220, 215, 200, 30);
+        contentPane.add(txtDepartment);
+        txtDepartment.setColumns(10);
+
+        JLabel lblHireDate = new JLabel("Hire Date:");
+        lblHireDate.setForeground(new Color(192, 192, 192));
+        lblHireDate.setFont(new Font("Tahoma", Font.PLAIN, 16));
+        lblHireDate.setBounds(70, 255, 140, 30);
+        contentPane.add(lblHireDate);
+
+        txtHireDate = new JTextField();
+        txtHireDate.setFont(new Font("Tahoma", Font.PLAIN, 16));
+        txtHireDate.setBounds(220, 255, 200, 30);
+        contentPane.add(txtHireDate);
+        txtHireDate.setColumns(10);
+
+        JLabel lblPayPeriod = new JLabel("Pay Period:");
+        lblPayPeriod.setForeground(new Color(192, 192, 192));
+        lblPayPeriod.setFont(new Font("Tahoma", Font.PLAIN, 16));
+        lblPayPeriod.setBounds(70, 295, 140, 30);
+        contentPane.add(lblPayPeriod);
+
+        JLabel lblSalaryCreditedTo = new JLabel("Salary Credited To:");
+        lblSalaryCreditedTo.setForeground(new Color(192, 192, 192));
+        lblSalaryCreditedTo.setFont(new Font("Tahoma", Font.PLAIN, 16));
+        lblSalaryCreditedTo.setBounds(70, 335, 140, 30);
+        contentPane.add(lblSalaryCreditedTo);
+
+        txtSalaryCreditedTo = new JTextField();
+        txtSalaryCreditedTo.setFont(new Font("Tahoma", Font.PLAIN, 16));
+        txtSalaryCreditedTo.setBounds(220, 335, 200, 30);
+        contentPane.add(txtSalaryCreditedTo);
+        txtSalaryCreditedTo.setColumns(10);
+
+        JLabel lblBankName = new JLabel("Bank Name:");
+        lblBankName.setForeground(new Color(192, 192, 192));
+        lblBankName.setFont(new Font("Tahoma", Font.PLAIN, 16));
+        lblBankName.setBounds(70, 375, 140, 30);
+        contentPane.add(lblBankName);
+
+        txtBankName = new JTextField();
+        txtBankName.setFont(new Font("Tahoma", Font.PLAIN, 16));
+        txtBankName.setBounds(220, 374, 200, 30);
+        contentPane.add(txtBankName);
+        txtBankName.setColumns(10);
+
+        JLabel lblAccountNo = new JLabel("Account No:");
+        lblAccountNo.setForeground(new Color(192, 192, 192));
+        lblAccountNo.setFont(new Font("Tahoma", Font.PLAIN, 16));
+        lblAccountNo.setBounds(70, 415, 140, 30);
+        contentPane.add(lblAccountNo);
+
+        txtAccountNo = new JTextField();
+        txtAccountNo.setFont(new Font("Tahoma", Font.PLAIN, 16));
+        txtAccountNo.setBounds(220, 414, 200, 30);
+        contentPane.add(txtAccountNo);
+        txtAccountNo.setColumns(10);
+
+        JLabel lblPayDate = new JLabel("Pay Date:");
+        lblPayDate.setForeground(new Color(192, 192, 192));
+        lblPayDate.setFont(new Font("Tahoma", Font.PLAIN, 16));
+        lblPayDate.setBounds(70, 452, 140, 30);
+        contentPane.add(lblPayDate);
+
+        JLabel lblAllowance = new JLabel("Allowance:");
+        lblAllowance.setForeground(new Color(192, 192, 192));
+        lblAllowance.setFont(new Font("Tahoma", Font.PLAIN, 16));
+        lblAllowance.setBounds(70, 572, 140, 30);
+        contentPane.add(lblAllowance);
+
+        txtAllowance = new JTextField();
+        txtAllowance.setFont(new Font("Tahoma", Font.PLAIN, 16));
+        txtAllowance.setBounds(220, 572, 200, 30);
+        contentPane.add(txtAllowance);
+        txtAllowance.setColumns(10);
+
+        JLabel lblBonus = new JLabel("Bonus:");
+        lblBonus.setForeground(new Color(192, 192, 192));
+        lblBonus.setFont(new Font("Tahoma", Font.PLAIN, 16));
+        lblBonus.setBounds(70, 614, 140, 30);
+        contentPane.add(lblBonus);
+
+        txtBonus = new JTextField();
+        txtBonus.setFont(new Font("Tahoma", Font.PLAIN, 16));
+        txtBonus.setBounds(220, 612, 200, 30);
+        contentPane.add(txtBonus);
+        txtBonus.setColumns(10);
+
+        JLabel lblPt = new JLabel("Pt:");
+        lblPt.setForeground(new Color(192, 192, 192));
+        lblPt.setFont(new Font("Tahoma", Font.PLAIN, 16));
+        lblPt.setBounds(70, 696, 140, 30);
+        contentPane.add(lblPt);
+
+        txtPt = new JTextField();
+        txtPt.setFont(new Font("Tahoma", Font.PLAIN, 16));
+        txtPt.setBounds(220, 696, 200, 30);
+        contentPane.add(txtPt);
+        txtPt.setColumns(10);
+
+        JLabel lblEmployeeEPF = new JLabel("Employee EPF:");
+        lblEmployeeEPF.setForeground(new Color(192, 192, 192));
+        lblEmployeeEPF.setFont(new Font("Tahoma", Font.PLAIN, 16));
+        lblEmployeeEPF.setBounds(70, 736, 140, 30);
+        contentPane.add(lblEmployeeEPF);
+
+        txtEmployeeEPF = new JTextField();
+        txtEmployeeEPF.setFont(new Font("Tahoma", Font.PLAIN, 16));
+        txtEmployeeEPF.setBounds(220, 736, 200, 30);
+        contentPane.add(txtEmployeeEPF);
+        txtEmployeeEPF.setColumns(10);
+
+        JLabel lblGrossWages = new JLabel("Gross Wages:");
+        lblGrossWages.setForeground(new Color(192, 192, 192));
+        lblGrossWages.setFont(new Font("Tahoma", Font.PLAIN, 16));
+        lblGrossWages.setBounds(574, 135, 128, 30);
+        contentPane.add(lblGrossWages);
+
+        txtGrossWages = new JTextField();
+        txtGrossWages.setFont(new Font("Tahoma", Font.PLAIN, 16));
+        txtGrossWages.setBounds(712, 135, 200, 30);
+        contentPane.add(txtGrossWages);
+        txtGrossWages.setColumns(10);
+
+        JLabel lblGrossDeduction = new JLabel("Gross Deduction:");
+        lblGrossDeduction.setForeground(new Color(192, 192, 192));
+        lblGrossDeduction.setFont(new Font("Tahoma", Font.PLAIN, 16));
+        lblGrossDeduction.setBounds(574, 175, 128, 30);
+        contentPane.add(lblGrossDeduction);
+
+        txtGrossDeduction = new JTextField();
+        txtGrossDeduction.setFont(new Font("Tahoma", Font.PLAIN, 16));
+        txtGrossDeduction.setBounds(712, 175, 200, 30);
+        contentPane.add(txtGrossDeduction);
+        txtGrossDeduction.setColumns(10);
+
+        JLabel lblNetWages = new JLabel("Net Wages:");
+        lblNetWages.setForeground(new Color(192, 192, 192));
+        lblNetWages.setFont(new Font("Tahoma", Font.PLAIN, 16));
+        lblNetWages.setBounds(574, 215, 128, 30);
+        contentPane.add(lblNetWages);
+
+        txtNetWages = new JTextField();
+        txtNetWages.setFont(new Font("Tahoma", Font.PLAIN, 16));
+        txtNetWages.setBounds(712, 215, 200, 30);
+        contentPane.add(txtNetWages);
+        txtNetWages.setColumns(10);
+
+        JLabel lblTotalNetPayable = new JLabel("Total Net Payable:");
+        lblTotalNetPayable.setForeground(new Color(192, 192, 192));
+        lblTotalNetPayable.setFont(new Font("Tahoma", Font.PLAIN, 16));
+        lblTotalNetPayable.setBounds(574, 255, 140, 30);
+        contentPane.add(lblTotalNetPayable);
+
+        txtTotalNetPayable = new JTextField();
+        txtTotalNetPayable.setFont(new Font("Tahoma", Font.PLAIN, 16));
+        txtTotalNetPayable.setBounds(712, 255, 200, 30);
+        contentPane.add(txtTotalNetPayable);
+        txtTotalNetPayable.setColumns(10);
+
+        JTextArea textArea = new JTextArea();
+        textArea.setBounds(501, 300, 562, 385);
+        contentPane.add(textArea);
+
+        JButton btnGeneratePaySlip = new JButton("Generate Pay Slip");
+        btnGeneratePaySlip.setBackground(new Color(33, 67, 67));
+        btnGeneratePaySlip.setForeground(new Color(192, 192, 192));
+        btnGeneratePaySlip.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                generatePaySlip(textArea);
+            }
+        });
+        btnGeneratePaySlip.setFont(new Font("Tahoma", Font.BOLD, 17));
+        btnGeneratePaySlip.setBounds(682, 715, 200, 45);
+        contentPane.add(btnGeneratePaySlip);
+
+        JLabel lblNewLabel = new JLabel("EMPLOYEE PAY SLIP");
+        lblNewLabel.setForeground(new Color(192, 192, 192));
+        lblNewLabel.setFont(new Font("Tahoma", Font.BOLD, 35));
+        lblNewLabel.setBounds(392, 10, 411, 37);
+        contentPane.add(lblNewLabel);
+
+        JLabel lblNewLabel_1 = new JLabel("Employee Pay Summary");
+        lblNewLabel_1.setForeground(new Color(192, 192, 192));
+        lblNewLabel_1.setFont(new Font("Tahoma", Font.BOLD, 20));
+        lblNewLabel_1.setBounds(70, 94, 241, 30);
+        contentPane.add(lblNewLabel_1);
+
+        JLabel lblNewLabel_1_1 = new JLabel("Earnings");
+        lblNewLabel_1_1.setForeground(new Color(192, 192, 192));
+        lblNewLabel_1_1.setFont(new Font("Tahoma", Font.BOLD, 20));
+        lblNewLabel_1_1.setBounds(70, 490, 241, 30);
+        contentPane.add(lblNewLabel_1_1);
+
+        JLabel lblBasic_1 = new JLabel("Basic:");
+        lblBasic_1.setForeground(new Color(192, 192, 192));
+        lblBasic_1.setFont(new Font("Tahoma", Font.PLAIN, 16));
+        lblBasic_1.setBounds(70, 532, 140, 30);
+        contentPane.add(lblBasic_1);
+
+        JLabel lblNewLabel_1_1_1 = new JLabel("Deductions");
+        lblNewLabel_1_1_1.setForeground(new Color(192, 192, 192));
+        lblNewLabel_1_1_1.setFont(new Font("Tahoma", Font.BOLD, 20));
+        lblNewLabel_1_1_1.setBounds(70, 655, 241, 30);
+        contentPane.add(lblNewLabel_1_1_1);
+
+        txtBasic = new JTextField();
+        txtBasic.setFont(new Font("Tahoma", Font.PLAIN, 16));
+        txtBasic.setColumns(10);
+        txtBasic.setBounds(220, 530, 200, 30);
+        contentPane.add(txtBasic);
+
+        JButton btnNewButton = new JButton("Calculate");
+        btnNewButton.setBackground(new Color(33, 67, 67));
+        btnNewButton.setForeground(new Color(192, 192, 192));
+        btnNewButton.setFont(new Font("Tahoma", Font.BOLD, 20));
+        btnNewButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                calculateWages();
+            }
+        });
+        btnNewButton.setBounds(935, 250, 128, 37);
+        contentPane.add(btnNewButton);
+        
+        JButton btnNewButton_1 = new JButton("Print");
+        btnNewButton_1.setBackground(new Color(33, 67, 67));
+        btnNewButton_1.setForeground(new Color(192, 192, 192));
+        btnNewButton_1.setFont(new Font("Tahoma", Font.BOLD, 22));
+        btnNewButton_1.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		 try {
+                     textArea.print();
+                 } catch (PrinterException ex) {
+                     ex.printStackTrace();
+                 }
+        	}
+        });
+        btnNewButton_1.setBounds(935, 717, 128, 37);
+        contentPane.add(btnNewButton_1);
+        
+        JDateChooser dateChooser = new JDateChooser();
+        dateChooser.setBounds(220, 295, 200, 30);
+        contentPane.add(dateChooser);
+        
+        JDateChooser dateChooser_1 = new JDateChooser();
+        dateChooser_1.setBounds(220, 454, 200, 30);
+        contentPane.add(dateChooser_1);
+        
+        JButton btnNewButton_2 = new JButton("Back");
+        btnNewButton_2.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		try {
+					new Dashboardpage().setVisible(true);
+					SwingUtilities.windowForComponent(btnNewButton_2).dispose();
+				}
+				catch(Exception o) {
+					JOptionPane.showMessageDialog(btnNewButton_2,this,"Error while establishing connection failed",0);
+				}
+        	}
+        });
+        btnNewButton_2.setForeground(new Color(192, 192, 192));
+        btnNewButton_2.setBackground(new Color(33, 67, 67));
+        btnNewButton_2.setFont(new Font("Tahoma", Font.BOLD, 17));
+        btnNewButton_2.setBounds(505, 714, 113, 37);
+        contentPane.add(btnNewButton_2);
+        }
+
+        protected void fetchEmployeeDetails() {
+        String employeeID = txtEmployeeID.getText();
+     // Query the database using the entered employee ID
+        String query = "SELECT * FROM Employee WHERE EmployeeID = ?";
+        try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/employee", "root", "Sridevi@123");
+                PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setString(1, employeeID);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    // Retrieve and set employee details
+                    txtName.setText(rs.getString("Name"));
+                    txtDepartment.setText(rs.getString("Department"));
+                    txtHireDate.setText(rs.getString("HiredDate"));
+                    // Similarly set other fields...
+                } else {
+                    JOptionPane.showMessageDialog(this, "Employee not found.");
+                }
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        }
+
+        protected void calculateWages() {
+            // Fetch input values
+            double basic = Double.parseDouble(txtBasic.getText());
+            double allowance = Double.parseDouble(txtAllowance.getText());
+            double bonus = Double.parseDouble(txtBonus.getText());
+            double pt = Double.parseDouble(txtPt.getText());
+            double employeeEPF = Double.parseDouble(txtEmployeeEPF.getText());
+
+            // Calculate gross wages
+            double grossWages = basic + allowance + bonus;
+
+            // Calculate gross deductions
+            double grossDeduction = pt + employeeEPF;
+
+            // Calculate net wages
+            double netWages = grossWages - grossDeduction;
+
+            // Display calculated values
+            txtGrossWages.setText(String.valueOf(grossWages));
+            txtGrossDeduction.setText(String.valueOf(grossDeduction));
+            txtNetWages.setText(String.valueOf(netWages));
+            
+            // Update Total Net Payable with net wages
+            txtTotalNetPayable.setText(String.valueOf(netWages));
+        }
+
+
+        protected void generatePaySlip(JTextArea textArea) {
+        // Fetch employee details from text fields
+        String employeeID = txtEmployeeID.getText();
+        String name = txtName.getText();
+        String department = txtDepartment.getText();
+        String hireDate = txtHireDate.getText();
+
+        // Fetch calculated values
+        String basic = txtBasic.getText();
+        String allowance = txtAllowance.getText();
+        String bonus = txtBonus.getText();
+        String pt = txtPt.getText();
+        String employeeEPF = txtEmployeeEPF.getText();
+        String grossWages = txtGrossWages.getText();
+        String grossDeduction = txtGrossDeduction.getText();
+        String netWages = txtNetWages.getText();
+        String totalNetPayable = txtTotalNetPayable.getText();
+
+        // Append the pay slip details to the text area
+        textArea.setText(
+        	    "\t\t\t\t\tPAY SLIP\n\n" +
+        	    String.format("%-20s %s\n", "Employee ID:", employeeID) +
+        	    String.format("%-20s %s\n", "Name:", name) +
+        	    String.format("%-20s %s\n", "Department:", department) +
+        	    String.format("%-20s %s\n", "Hire Date:", hireDate) +
+        	    "----------------------------------------\n" +
+        	    String.format("%-20s %s\n", "Basic:", basic) +
+        	    String.format("%-20s %s\n", "Allowance:", allowance) +
+        	    String.format("%-20s %s\n", "Bonus:", bonus) +
+        	    "----------------------------------------\n" +
+        	    String.format("%-20s %s\n", "Total Earnings:", grossWages) +
+        	    "----------------------------------------\n" +
+        	    "Deductions:\n" +
+        	    String.format("%-20s %s\n", "Pt:", pt) +
+        	    String.format("%-20s %s\n", "Employee EPF:", employeeEPF) +
+        	    "----------------------------------------\n" +
+        	    String.format("%-20s %s\n", "Total Deductions:", grossDeduction) +
+        	    "----------------------------------------\n" +
+        	    String.format("%-20s %s\n", "Net Wages:", netWages) +
+        	    String.format("%-20s %s\n", "Total Net Payable:", totalNetPayable) +
+        	    "----------------------------------------\n" +
+        	    "Congratulations! Your salary has been credited."
+        	);
+
+
+        }
+ }
